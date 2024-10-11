@@ -1,0 +1,517 @@
+# Copyright (C) 2024 Alex Georgiev
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom Fields Snapshots 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/custom-fields-snapshots\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-10-03T19:42:43+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.10.0\n"
+"X-Domain: custom-fields-snapshots\n"
+
+#. Plugin Name of the plugin
+#: custom-fields-snapshots.php
+#: includes/class-admin.php:82
+#: includes/class-admin.php:105
+#: includes/class-admin.php:238
+msgid "Custom Fields Snapshots"
+msgstr ""
+
+#. Description of the plugin
+#: custom-fields-snapshots.php
+msgid "Create backups of your Advanced Custom Fields data for easy migration, version control, and restoration."
+msgstr ""
+
+#. Author of the plugin
+#: custom-fields-snapshots.php
+msgid "Alex Georgiev"
+msgstr ""
+
+#. Author URI of the plugin
+#: custom-fields-snapshots.php
+msgid "https://alexgv.com/"
+msgstr ""
+
+#: includes/class-admin.php:83
+#: includes/class-admin.php:106
+msgid "Field Snapshots"
+msgstr ""
+
+#: includes/class-admin.php:121
+#: includes/class-admin.php:157
+#: includes/class-admin.php:226
+#: includes/class-admin.php:228
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: includes/class-admin.php:130
+msgid "Save Network Settings"
+msgstr ""
+
+#: includes/class-admin.php:144
+msgid "Configure network-wide settings for Custom Fields Snapshots."
+msgstr ""
+
+#: includes/class-admin.php:195
+#: includes/class-admin.php:196
+#: includes/class-admin.php:241
+#: includes/class-admin.php:298
+#: includes/class-admin.php:430
+msgid "Export"
+msgstr ""
+
+#: includes/class-admin.php:204
+#: includes/class-admin.php:205
+#: includes/class-admin.php:242
+#: includes/class-admin.php:300
+#: includes/class-admin.php:432
+msgid "Import"
+msgstr ""
+
+#: includes/class-admin.php:213
+#: includes/class-admin.php:214
+#: includes/class-admin.php:243
+#: includes/class-admin.php:302
+#: includes/class-admin.php:434
+#: includes/class-admin.php:1172
+msgid "Settings"
+msgstr ""
+
+#: includes/class-admin.php:256
+msgid "About"
+msgstr ""
+
+#: includes/class-admin.php:257
+msgid "Custom Fields Snapshots allow you to easily create backups of your Advanced Custom Fields (ACF) data by exporting selected field groups, post types, and options. These snapshots enable version control, make it easier to share setups with team members, assist with migrations between WordPress environments, and enable quick restoration of previous configurations."
+msgstr ""
+
+#: includes/class-admin.php:270
+msgid "Configure settings for Custom Fields Snapshots."
+msgstr ""
+
+#: includes/class-admin.php:295
+#: includes/class-admin.php:307
+#: includes/class-admin.php:332
+#: includes/class-admin.php:406
+msgid "Import Snapshot"
+msgstr ""
+
+#: includes/class-admin.php:315
+msgid "Drag & Drop your JSON file here or click to select"
+msgstr ""
+
+#: includes/class-admin.php:321
+msgid "Remove"
+msgstr ""
+
+#: includes/class-admin.php:327
+msgid "Rollback changes on failure"
+msgstr ""
+
+#: includes/class-admin.php:328
+msgid "In case the import process fails, all changes will be automatically reverted."
+msgstr ""
+
+#: includes/class-admin.php:342
+#: includes/class-admin.php:495
+msgid "How To Use"
+msgstr ""
+
+#: includes/class-admin.php:345
+msgid "Back up your WordPress database"
+msgstr ""
+
+#: includes/class-admin.php:346
+msgid "Upload the snapshot JSON file (drag or select)"
+msgstr ""
+
+#: includes/class-admin.php:347
+msgid "Enable \"Rollback changes on failure\" (recommended)"
+msgstr ""
+
+#: includes/class-admin.php:348
+msgid "Click \"Import Snapshot\""
+msgstr ""
+
+#: includes/class-admin.php:349
+msgid "Enable event logs in Settings if issues occur"
+msgstr ""
+
+#: includes/class-admin.php:352
+msgid "While the import process is generally safe when using the rollback feature, it's always best to have a backup as an extra precaution."
+msgstr ""
+
+#: includes/class-admin.php:407
+msgid "Importing..."
+msgstr ""
+
+#: includes/class-admin.php:408
+msgid "Event Log"
+msgstr ""
+
+#: includes/class-admin.php:409
+msgid "Please select a file to proceed."
+msgstr ""
+
+#: includes/class-admin.php:410
+msgid "Invalid file type selected. Please select a JSON file."
+msgstr ""
+
+#: includes/class-admin.php:411
+msgid "\"Rollback changes on failure\" is turned off. Are you sure you want to proceed?"
+msgstr ""
+
+#: includes/class-admin.php:412
+msgid "An unknown error occurred. Please try again."
+msgstr ""
+
+#: includes/class-admin.php:425
+#: includes/class-admin.php:492
+msgid "Export Snapshot"
+msgstr ""
+
+#: includes/class-admin.php:444
+msgid "Field Groups"
+msgstr ""
+
+#: includes/class-admin.php:451
+msgid "Post Types and Options"
+msgstr ""
+
+#: includes/class-admin.php:454
+msgid "Public Post Types"
+msgstr ""
+
+#: includes/class-admin.php:461
+msgid "Private Post Types"
+msgstr ""
+
+#: includes/class-admin.php:468
+msgid "Global Data"
+msgstr ""
+
+#: includes/class-admin.php:481
+msgid "Options"
+msgstr ""
+
+#: includes/class-admin.php:483
+msgid "(ACF Pro required)"
+msgstr ""
+
+#: includes/class-admin.php:498
+msgid "Select field groups to export"
+msgstr ""
+
+#: includes/class-admin.php:499
+msgid "Choose post types and specific posts"
+msgstr ""
+
+#: includes/class-admin.php:500
+msgid "Choose whether to include global options"
+msgstr ""
+
+#: includes/class-admin.php:501
+msgid "Review your selections"
+msgstr ""
+
+#: includes/class-admin.php:502
+msgid "Click \"Export Snapshot\" to download the JSON file"
+msgstr ""
+
+#: includes/class-admin.php:549
+#: includes/class-admin.php:1034
+msgid "Please select at least one Field Group."
+msgstr ""
+
+#: includes/class-admin.php:550
+msgid "Please select at least one Post Type or Options."
+msgstr ""
+
+#. translators: %s: Post type name
+#: includes/class-admin.php:552
+msgid "Please select at least one post ID for post type: %s"
+msgstr ""
+
+#: includes/class-admin.php:565
+msgid "No field groups found."
+msgstr ""
+
+#: includes/class-admin.php:573
+msgid "All Field Groups"
+msgstr ""
+
+#. translators: %s: Type of post types (e.g., 'public' or 'private')
+#: includes/class-admin.php:648
+msgid "No %s post types found."
+msgstr ""
+
+#: includes/class-admin.php:652
+msgid "Public"
+msgstr ""
+
+#: includes/class-admin.php:652
+msgid "Private"
+msgstr ""
+
+#. translators: %s: Post type label (e.g., "Public" or "Private")
+#: includes/class-admin.php:660
+msgid "All %s Post Types"
+msgstr ""
+
+#: includes/class-admin.php:675
+msgid "All"
+msgstr ""
+
+#. translators: %d: Post ID
+#: includes/class-admin.php:707
+msgid "ID: %d"
+msgstr ""
+
+#: includes/class-admin.php:717
+msgid "Published:"
+msgstr ""
+
+#: includes/class-admin.php:766
+#: includes/class-admin.php:1009
+msgid "Insufficient permissions"
+msgstr ""
+
+#: includes/class-admin.php:774
+msgid "No file uploaded"
+msgstr ""
+
+#: includes/class-admin.php:792
+msgid "File upload failed. Please try again."
+msgstr ""
+
+#: includes/class-admin.php:798
+msgid "The uploaded file exceeds the maximum file size limit."
+msgstr ""
+
+#: includes/class-admin.php:801
+msgid "The file was only partially uploaded. Please try again."
+msgstr ""
+
+#: includes/class-admin.php:804
+msgid "No file was uploaded. Please select a file and try again."
+msgstr ""
+
+#: includes/class-admin.php:808
+msgid "Server error. Unable to save the uploaded file."
+msgstr ""
+
+#: includes/class-admin.php:811
+msgid "File upload stopped by extension."
+msgstr ""
+
+#: includes/class-admin.php:829
+msgid "Please upload a JSON file"
+msgstr ""
+
+#: includes/class-admin.php:843
+msgid "The uploaded file is not a valid JSON."
+msgstr ""
+
+#: includes/class-admin.php:852
+msgid "The uploaded file has an invalid JSON structure."
+msgstr ""
+
+#: includes/class-admin.php:880
+msgid "Import completed successfully"
+msgstr ""
+
+#: includes/class-admin.php:888
+msgid "Import failed. View the event log for more details."
+msgstr ""
+
+#: includes/class-admin.php:888
+msgid "Import failed. Enable the event log from the Settings tab for more details."
+msgstr ""
+
+#: includes/class-admin.php:1005
+msgid "Invalid nonce"
+msgstr ""
+
+#: includes/class-admin.php:1038
+msgid "Please select at least one Post Type."
+msgstr ""
+
+#: includes/class-admin.php:1042
+msgid "Please select at least one post ID."
+msgstr ""
+
+#: includes/class-admin.php:1047
+msgid "Export Validation Error"
+msgstr ""
+
+#: includes/class-admin.php:1060
+msgid "No data to export for the selected field groups and post types/options."
+msgstr ""
+
+#: includes/class-admin.php:1060
+msgid "Export Error"
+msgstr ""
+
+#: includes/class-admin.php:1141
+msgid "Network Settings"
+msgstr ""
+
+#: includes/class-admin.php:1148
+#: includes/class-admin.php:1203
+msgid "Delete plugin data on uninstall"
+msgstr ""
+
+#: includes/class-admin.php:1179
+msgid "Event Logging"
+msgstr ""
+
+#: includes/class-admin.php:1219
+msgid "Show detailed log after the import process"
+msgstr ""
+
+#: includes/class-admin.php:1222
+msgid "When enabled, a detailed log will be displayed after the import process."
+msgstr ""
+
+#: includes/class-admin.php:1238
+msgid "Delete all plugin data when uninstalling"
+msgstr ""
+
+#: includes/class-admin.php:1241
+msgid "If enabled, all plugin-specific settings will be removed upon uninstallation. This will not affect your ACF field data or content created using the plugin - only the plugin's internal settings will be deleted."
+msgstr ""
+
+#: includes/class-importer.php:59
+msgid "Invalid JSON data"
+msgstr ""
+
+#: includes/class-importer.php:65
+msgid "Import failed: Invalid data format."
+msgstr ""
+
+#. translators: %s: group key
+#: includes/class-importer.php:75
+msgid "Importing group: \"%s\""
+msgstr ""
+
+#: includes/class-importer.php:86
+msgid "Changes rolled back due to import failure."
+msgstr ""
+
+#: includes/class-importer.php:89
+msgid "Import process finished. Status:"
+msgstr ""
+
+#: includes/class-importer.php:89
+msgid "Success"
+msgstr ""
+
+#: includes/class-importer.php:89
+msgid "Failed"
+msgstr ""
+
+#: includes/class-importer.php:104
+msgid "No fields to import, skipping update."
+msgstr ""
+
+#. translators: %1$s: field name, %2$s: group key
+#: includes/class-importer.php:112
+msgid "Invalid data structure for field \"%1$s\" in group \"%2$s\""
+msgstr ""
+
+#. translators: %s: option name
+#: includes/class-importer.php:157
+msgid "Option \"%s\" has the same value. Skipping update."
+msgstr ""
+
+#. translators: %s: option name
+#: includes/class-importer.php:166
+msgid "Failed to update option \"%s\"."
+msgstr ""
+
+#. translators: %s: field name
+#: includes/class-importer.php:174
+msgid "Successfully updated option \"%s\""
+msgstr ""
+
+#. translators: %1$s: field name, %2$s: group key
+#: includes/class-importer.php:197
+msgid "Invalid post ID for field \"%1$s\" in group \"%2$s\""
+msgstr ""
+
+#. translators: %1$d: post ID, %2$s: field name
+#: includes/class-importer.php:204
+msgid "Permission denied for post ID %1$d. Cannot edit field \"%2$s\""
+msgstr ""
+
+#. translators: %1$d: post ID, %2$s: field name
+#: includes/class-importer.php:213
+msgid "Post with ID %1$d does not exist. Cannot update field \"%2$s\""
+msgstr ""
+
+#. translators: %1$s: field name, %2$d: post ID
+#: includes/class-importer.php:230
+msgid "Field \"%1$s\" for post ID %2$d has the same value. Skipping update."
+msgstr ""
+
+#. translators: %1$s: field name, %2$d: post ID
+#: includes/class-importer.php:239
+msgid "Failed to update field \"%1$s\" for post ID %2$d."
+msgstr ""
+
+#. translators: %1$s: field name, %2$d: post ID
+#: includes/class-importer.php:247
+msgid "Successfully updated field \"%1$s\" for post ID %2$d."
+msgstr ""
+
+#. translators: %s: option name
+#: includes/class-importer.php:276
+msgid "Failed to rollback option \"%s\""
+msgstr ""
+
+#. translators: %s: option name
+#: includes/class-importer.php:279
+msgid "Rolled back option \"%s\""
+msgstr ""
+
+#. translators: %1$s: field name, %2$s: post type, %3$d: post ID
+#: includes/class-importer.php:299
+msgid "Failed to rollback field \"%1$s\" for %2$s ID %3$d."
+msgstr ""
+
+#. translators: %1$s: field name, %2$s: post type, %3$d: post ID
+#: includes/class-importer.php:302
+msgid "Rolled back field \"%1$s\" for %2$s ID %3$d."
+msgstr ""
+
+#: includes/class-logger.php:48
+msgid "INFO"
+msgstr ""
+
+#. translators: Log entry type.
+#: includes/class-logger.php:49
+msgid "ERROR"
+msgstr ""
+
+#. translators: Log entry type.
+#: includes/class-logger.php:50
+msgid "SUCCESS"
+msgstr ""
+
+#. translators: 1: Log entry type, 2: Log entry time, 3: Log entry message.
+#: includes/class-logger.php:57
+msgid "[%1$s] %2$s: %3$s"
+msgstr ""
+
+#: includes/class-plugin.php:81
+msgid "Custom Fields Snapshots requires Advanced Custom Fields or Advanced Custom Fields Pro to be active."
+msgstr ""
+
+#: includes/class-plugin.php:96
+msgid "Requires Advanced Custom Fields or Advanced Custom Fields Pro to be active."
+msgstr ""
