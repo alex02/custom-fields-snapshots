@@ -2,6 +2,8 @@
 /**
  * Main Plugin Class
  *
+ * @since 1.0.0
+ *
  * @package CustomFieldsSnapshots
  */
 
@@ -10,6 +12,8 @@ namespace Custom_Fields_Snapshots;
 /**
  * Plugin Class
  *
+ * @since 1.0.0
+ *
  * Handles the core functionality of the Custom Fields Snapshots plugin.
  */
 class Plugin {
@@ -17,21 +21,24 @@ class Plugin {
 	/**
 	 * Initialize the plugin.
 	 *
+	 * @since 1.0.0
+	 *
 	 * Sets up plugin hooks and filters.
 	 */
 	public static function init() {
 		if ( ! self::is_acf_active() ) {
+			add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 			add_action( 'admin_notices', array( __CLASS__, 'admin_notice' ) );
 			return;
 		}
 
 		self::init_admin();
-
-		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 	}
 
 	/**
 	 * Initialize the plugin admin.
+	 *
+	 * @since 1.0.0
 	 *
 	 * Loads admin-specific functionality.
 	 */
@@ -56,6 +63,8 @@ class Plugin {
 	/**
 	 * Check if ACF or ACF Pro is active.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @return bool True if ACF or ACF Pro is active, false otherwise.
 	 */
 	public static function is_acf_active() {
@@ -64,6 +73,8 @@ class Plugin {
 
 	/**
 	 * Check if Advanced Custom Fields PRO is active.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @return bool True if ACF PRO is active, false otherwise.
 	 */
@@ -86,6 +97,8 @@ class Plugin {
 
 	/**
 	 * Add plugin row meta.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param array  $plugin_meta An array of the plugin's metadata.
 	 * @param string $plugin_file Path to the plugin file relative to the plugins directory.
@@ -111,6 +124,8 @@ class Plugin {
 	 *
 	 * For single site:
 	 * - Removes all plugin-specific options.
+	 *
+	 * @since 1.0.0
 	 */
 	public static function uninstall() {
 		if ( is_multisite() ) {
@@ -138,6 +153,8 @@ class Plugin {
 	 * Plugin uninstall callback.
 	 *
 	 * Cleans up plugin data when uninstalled.
+	 *
+	 * @since 1.0.0
 	 */
 	public static function delete_site_options() {
 		if ( get_option( 'custom_fields_snapshots_delete_plugin_data', false ) ) {

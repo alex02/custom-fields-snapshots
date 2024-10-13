@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Custom Fields Snapshots
  * Description: Create backups of your Advanced Custom Fields data for easy migration, version control, and restoration.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Alex Georgiev
  * Author URI: https://alexgv.com/
  * License: GPL v2 or later
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants.
-define( 'CUSTOM_FIELDS_SNAPSHOTS_VERSION', '1.0.0' );
+define( 'CUSTOM_FIELDS_SNAPSHOTS_VERSION', '1.1.0' );
 define( 'CUSTOM_FIELDS_SNAPSHOTS_PLUGIN_FILE', __FILE__ );
 define( 'CUSTOM_FIELDS_SNAPSHOTS_PLUGIN_DIR', plugin_dir_path( CUSTOM_FIELDS_SNAPSHOTS_PLUGIN_FILE ) );
 define( 'CUSTOM_FIELDS_SNAPSHOTS_PLUGIN_URL', plugin_dir_url( CUSTOM_FIELDS_SNAPSHOTS_PLUGIN_FILE ) );

@@ -2,7 +2,8 @@
     border-bottom: 0;
 }
 
-.custom-fields-snapshots .post-type-section h4 {
+.custom-fields-snapshots .post-type-section h4,
+.custom-fields-snapshots .side-wide-section h4 {
     margin-bottom: 0;
     margin-top: 0;
 }
@@ -10,11 +11,10 @@
 .custom-fields-snapshots .export-tab {
     display: grid;
     gap: 1em;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 1fr;
 }
 
-.custom-fields-snapshots .export-step,
-.custom-fields-snapshots .info-box {
+.custom-fields-snapshots .export-step {
     background-color: #fff;
     border: 1px solid #ccd0d4;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
@@ -45,51 +45,15 @@
 .custom-fields-snapshots .post-types-container {
     display: grid;
     gap: 0.75em;
-    grid-template-columns: 1fr 1fr 0.5fr;
+    grid-template-columns: repeat(3, 1fr);
     justify-content: flex-start;
 }
 
-.custom-fields-snapshots .post-type-section {
+.custom-fields-snapshots .post-type-section,
+.custom-fields-snapshots .side-wide-section {
 	border-radius: 5px;
 	flex-basis: 33.333%;
 	padding-top: 20px;
-}
-
-.custom-fields-snapshots .info-box-list {
-    counter-reset: step-counter;
-    list-style-type: none;
-    margin: 0;
-    padding-left: 0;
-}
-
-.custom-fields-snapshots .info-box-list li {
-    align-items: center;
-    display: flex;
-    margin-bottom: 10px;
-    min-height: 30px;
-    padding-left: 40px;
-    position: relative;
-}
-
-.custom-fields-snapshots .info-box-list li:last-child {
-    margin-bottom: 0;
-}
-
-.custom-fields-snapshots .info-box-list li::before {
-    background-color: var(--custom-fields-snapshots-primary-color, #2271b1);
-    border-radius: 50%;
-    color: #fff;
-    content: counter(step-counter);
-    counter-increment: step-counter;
-    font-size: 16px;
-    height: 30px;
-    left: 0;
-    line-height: 30px;
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 30px;
 }
 
 .custom-fields-snapshots label:not(:first-of-type) {
@@ -168,11 +132,13 @@
     padding: 10px 0;
 }
 
-.custom-fields-snapshots .post-type-selection {
+.custom-fields-snapshots .post-type-selection,
+.custom-fields-snapshots .user-selection {
     margin-bottom: 5px;
 }
 
-.custom-fields-snapshots .post-type-selection label {
+.custom-fields-snapshots .post-type-selection label,
+.custom-fields-snapshots .user-selection label {
     align-items: center;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -182,20 +148,26 @@
     transition: all 0.3s ease;
 }
 
-.custom-fields-snapshots .post-type-selection label:hover {
+.custom-fields-snapshots .post-type-selection label:hover,
+.custom-fields-snapshots .user-selection label:hover {
     background-color: #f0f0f0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.custom-fields-snapshots .post-type-selection input[type="checkbox"] {
+.custom-fields-snapshots .post-type-selection input[type="checkbox"],
+.custom-fields-snapshots .user-selection input[type="checkbox"] {
     margin-right: 10px;
 }
 
-.custom-fields-snapshots .post-ids-selection {
+.custom-fields-snapshots .post-ids-selection,
+.custom-fields-snapshots .user-ids-selection,
+.custom-fields-snapshots .user-roles-selection {
     margin: 5px 0;
 }
 
-.custom-fields-snapshots .post-ids-selection label {
+.custom-fields-snapshots .post-ids-selection label,
+.custom-fields-snapshots .user-ids-selection label,
+.custom-fields-snapshots .user-roles-selection label {
     margin-bottom: 0.5em;
 }
 
@@ -204,7 +176,8 @@
     font-weight: bold;
 }
 
-.custom-fields-snapshots .select-all-post-types-container label {
+.custom-fields-snapshots .select-all-post-types-container label,
+.custom-fields-snapshots .select-all-site-wide-data-container label {
     align-items: center;
     background-color: #f0f0f0;
     border: 1px solid #ddd;
@@ -217,7 +190,9 @@
     width: auto;
 }
 
-.custom-fields-snapshots .post-ids-selection .post-info {
+.custom-fields-snapshots .post-ids-selection .post-info,
+.custom-fields-snapshots .user-ids-selection .post-info,
+.custom-fields-snapshots .user-roles-selection .post-info {
     color: #afafaf;
 }
 
@@ -283,7 +258,8 @@
         margin: 0.5em 0.5em 0.5em 0;
     }
 
-    .custom-fields-snapshots .post-type-section {
+    .custom-fields-snapshots .post-type-section,
+    .custom-fields-shapshots .side-wide-section {
         flex-basis: 100%;
         padding-top: 0;
     }
@@ -297,7 +273,8 @@
         padding: 5px 10px;
     }
     
-    .custom-fields-snapshots .post-type-selection label {
+    .custom-fields-snapshots .post-type-selection label,
+    .custom-fields-snapshots .user-selection label {
         padding: 5px 10px;
     }
 

@@ -2,6 +2,8 @@
 /**
  * Custom Fields Snapshots Logger class
  *
+ * @since 1.0.0
+ *
  * @package CustomFieldsSnapshots
  */
 
@@ -14,11 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Custom Fields Snapshots Logger Class
+ *
+ * @since 1.0.0
  */
 class Logger {
 
 	/**
 	 * Stores log entries.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @var array
 	 */
@@ -26,6 +32,8 @@ class Logger {
 
 	/**
 	 * Log an event.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param string $type    The type of event ('success', 'error', 'info').
 	 * @param string $message The event message.
@@ -40,6 +48,8 @@ class Logger {
 
 	/**
 	 * Get all log entries.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @return array The log entries.
 	 */
@@ -66,6 +76,8 @@ class Logger {
 
 	/**
 	 * Clear all log entries.
+	 *
+	 * @since 1.0.0
 	 */
 	public function clear_log() {
 		$this->log = array();
@@ -73,6 +85,8 @@ class Logger {
 
 	/**
 	 * Get log entries as a formatted string.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @return string Formatted log entries.
 	 */

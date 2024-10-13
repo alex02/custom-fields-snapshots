@@ -2,6 +2,8 @@
 /**
  * Admin class for Custom Fields Snapshots.
  *
+ * @since 1.0.0
+ *
  * @package CustomFieldsSnapshots
  */
 
@@ -14,11 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Admin class.
+ *
+ * @since 1.0.0
  */
 class Admin {
 
 	/**
 	 * The exporter instance.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @var Exporter
 	 */
@@ -27,12 +33,16 @@ class Admin {
 	/**
 	 * The importer instance.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @var Importer
 	 */
 	private $importer;
 
 	/**
 	 * The logger instance.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @var Logger
 	 */
@@ -41,18 +51,24 @@ class Admin {
 	/**
 	 * Whether the current WordPress installation is a multisite network.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @var bool
 	 */
 	private $is_multisite;
 
 	/**
 	 * Constructor.
+	 *
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 	}
 
 	/**
 	 * Initialize the admin functionality.
+	 *
+	 * @since 1.0.0
 	 */
 	public function init() {
 		$this->is_multisite = is_multisite();
@@ -76,6 +92,8 @@ class Admin {
 
 	/**
 	 * Add admin menu for a single site.
+	 *
+	 * @since 1.0.0
 	 */
 	public function add_admin_menu() {
 		add_menu_page(
@@ -97,7 +115,7 @@ class Admin {
 	 * in the Network Admin area. It's only accessible to users with the
 	 * 'manage_network_options' capability.
 	 *
-	 * @return void
+	 * @since 1.0.0
 	 */
 	public function add_network_admin_menu() {
 		add_submenu_page(
@@ -115,6 +133,8 @@ class Admin {
 	 *
 	 * This function displays the network-wide settings page for the Custom Fields Snapshots plugin.
 	 * It checks for proper user capabilities and renders the settings form.
+	 *
+	 * @since 1.0.0
 	 */
 	public function render_network_settings_page() {
 		if ( ! current_user_can( 'manage_network_options' ) ) {
@@ -123,6 +143,7 @@ class Admin {
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+
 			<form action="<?php echo esc_url( network_admin_url( 'edit.php?action=custom_fields_snapshots_update_network_settings' ) ); ?>" method="post">
 				<?php
 				settings_fields( 'custom_fields_snapshots_network_settings' );
@@ -139,6 +160,8 @@ class Admin {
 	 *
 	 * This function outputs a description for the network-wide settings section
 	 * of the Custom Fields Snapshots plugin.
+	 *
+	 * @since 1.0.0
 	 */
 	public function render_network_settings_section() {
 		echo '<p>' . esc_html__( 'Configure network-wide settings for Custom Fields Snapshots.', 'custom-fields-snapshots' ) . '</p>';
@@ -149,6 +172,8 @@ class Admin {
 	 *
 	 * This function handles the form submission for updating network-wide settings.
 	 * It checks for proper permissions, validates the nonce, and updates the relevant options.
+	 *
+	 * @since 1.0.0
 	 */
 	public function update_network_settings() {
 		check_admin_referer( 'custom_fields_snapshots_network_settings-options' );
@@ -187,6 +212,8 @@ class Admin {
 	/**
 	 * Add submenu pages.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $parent_slug The slug of the parent menu.
 	 */
 	private function add_submenu_pages( $parent_slug ) {
@@ -220,6 +247,8 @@ class Admin {
 
 	/**
 	 * Render the settings page.
+	 *
+	 * @since 1.0.0
 	 */
 	public function render_settings_page() {
 		if ( $this->is_multisite && ! current_user_can( 'manage_network_options' ) ) {
@@ -236,6 +265,8 @@ class Admin {
 		?>
 		<div class="custom-fields-snapshots wrap">
 			<h1><?php esc_html_e( 'Custom Fields Snapshots', 'custom-fields-snapshots' ); ?></h1>
+
+			<?php settings_errors( 'custom_fields_snapshots_messages' ); ?>
 
 			<h2 class="nav-tab-wrapper">
 				<a href="<?php echo esc_url( trailingslashit( $admin_url ) . 'admin.php?page=custom-fields-snapshots' ); ?>" class="nav-tab"><?php esc_html_e( 'Export', 'custom-fields-snapshots' ); ?></a>
@@ -254,7 +285,20 @@ class Admin {
 
 				<div class="info-box">
 					<h3><?php esc_html_e( 'About', 'custom-fields-snapshots' ); ?></h3>
-					<p><?php esc_html_e( 'Custom Fields Snapshots allow you to easily create backups of your Advanced Custom Fields (ACF) data by exporting selected field groups, post types, and options. These snapshots enable version control, make it easier to share setups with team members, assist with migrations between WordPress environments, and enable quick restoration of previous configurations.', 'custom-fields-snapshots' ); ?></p>
+					<p><?php esc_html_e( 'Custom Fields Snapshots allow you to easily create backups of your Advanced Custom Fields (ACF) data by exporting selected field groups, post types, users, and options. These snapshots enable version control, make it easier to share setups with team members, assist with migrations between WordPress environments, and enable quick restoration of previous configurations.', 'custom-fields-snapshots' ); ?></p>
+
+					<h3><?php esc_html_e( 'Contribute', 'custom-fields-snapshots' ); ?></h3>
+					<p><?php esc_html_e( 'Support the development of this plugin:', 'custom-fields-snapshots' ); ?></p>
+
+					<div class="contribute-box">
+						<a class="button button-primary" href="<?php echo esc_url( 'https://wordpress.org/support/plugin/custom-fields-snapshots/reviews/#new-post' ); ?>" target="_blank" rel="noopener noreferrer">
+							<?php esc_html_e( 'Rate it on WordPress.org', 'custom-fields-snapshots' ); ?>
+						</a>
+
+						<a class="button button-primary" href="<?php echo esc_url( 'https://translate.wordpress.org/projects/wp-plugins/custom-fields-snapshots/' ); ?>" target="_blank" rel="noopener noreferrer">
+							<?php esc_html_e( 'Help translate it', 'custom-fields-snapshots' ); ?>
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -265,6 +309,8 @@ class Admin {
 
 	/**
 	 * Render the settings section description.
+	 *
+	 * @since 1.0.0
 	 */
 	public function render_settings_section() {
 		echo '<p>' . esc_html__( 'Configure settings for Custom Fields Snapshots.', 'custom-fields-snapshots' ) . '</p>';
@@ -272,6 +318,8 @@ class Admin {
 
 	/**
 	 * Enqueue the settings assets.
+	 *
+	 * @since 1.0.0
 	 */
 	private function enqueue_settings_assets() {
 		wp_enqueue_style(
@@ -284,6 +332,8 @@ class Admin {
 
 	/**
 	 * Render the import page.
+	 *
+	 * @since 1.0.0
 	 */
 	public function render_import_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -349,7 +399,7 @@ class Admin {
 						<li><?php esc_html_e( 'Enable event logs in Settings if issues occur', 'custom-fields-snapshots' ); ?></li>
 					</ol>
 
-					<p><strong><?php esc_html_e( 'While the import process is generally safe when using the rollback feature, it\'s always best to have a backup as an extra precaution.', 'custom-fields-snapshots' ); ?></strong></p>
+					<p><strong><?php esc_html_e( "While the import process is safe when using the rollback feature, it's always best to have a backup as an extra precaution.", 'custom-fields-snapshots' ); ?></strong></p>
 				</div>
 			</div>
 		</div>
@@ -360,6 +410,8 @@ class Admin {
 
 	/**
 	 * Enqueue the import assets.
+	 *
+	 * @since 1.0.0
 	 */
 	private function enqueue_import_assets() {
 		wp_enqueue_style(
@@ -417,6 +469,8 @@ class Admin {
 
 	/**
 	 * Render the export page.
+	 *
+	 * @since 1.0.0
 	 */
 	public function render_export_page() {
 
@@ -448,7 +502,7 @@ class Admin {
 		
 					<div class="export-step">
 						<span class="step-number">2</span>
-						<h3><?php esc_html_e( 'Post Types and Options', 'custom-fields-snapshots' ); ?></h3>
+						<h3><?php esc_html_e( 'Post Types, Users and Options', 'custom-fields-snapshots' ); ?></h3>
 						<div class="post-types-container">
 							<div class="post-type-section">
 								<h4><?php esc_html_e( 'Public Post Types', 'custom-fields-snapshots' ); ?></h4>
@@ -464,19 +518,28 @@ class Admin {
 									<?php $this->render_post_types_selection( 'private' ); ?>
 								</div>
 							</div>
-							<div class="post-type-section">
-								<h4><?php esc_html_e( 'Global Data', 'custom-fields-snapshots' ); ?></h4>
+							<div class="side-wide-section">
+								<h4><?php esc_html_e( 'Side-wide Data', 'custom-fields-snapshots' ); ?></h4>
 
 								<div class="scrollable-content">
+									<div class="select-all-site-wide-data-container post-type-selection">
+										<label>
+											<input type="checkbox" class="select-all-site-wide-data">
+											<?php
+											/* translators: %s: Post type label (e.g., "Public" or "Private") */
+											esc_html_e( 'All Side-wide Data', 'custom-fields-snapshots' );
+											?>
+										</label>
+									</div>
 									<div class="post-type-selection">
 										<?php
 										$is_acf_pro_active = Plugin::is_acf_pro_active();
 										?>
 										<label <?php echo ! $is_acf_pro_active ? 'class="disabled"' : ''; ?>>
 											<input type="checkbox" 
-												name="post_types[]" 
-												value="options" 
-												class="post-type-checkbox option-post-type-checkbox"
+												name="options" 
+												value="1" 
+												class="post-type-checkbox options-checkbox"
 												<?php echo ! $is_acf_pro_active ? 'disabled' : ''; ?>>
 											<?php esc_html_e( 'Options', 'custom-fields-snapshots' ); ?>
 											<?php if ( ! $is_acf_pro_active ) : ?>
@@ -484,6 +547,9 @@ class Admin {
 											<?php endif; ?>
 										</label>
 									</div>
+
+									<?php $this->render_users_selection(); ?>
+									<?php $this->render_user_roles_selection(); ?>
 								</div>
 							</div>
 						</div>
@@ -491,18 +557,6 @@ class Admin {
 		
 					<p><input type="submit" class="button button-primary" value="<?php esc_attr_e( 'Export Snapshot', 'custom-fields-snapshots' ); ?>"></p>
 				</form>
-				<div class="info-box">
-					<h3><?php esc_html_e( 'How To Use', 'custom-fields-snapshots' ); ?></h3>
-
-					<ol class="info-box-list">
-						<li><?php esc_html_e( 'Select field groups to export', 'custom-fields-snapshots' ); ?></li>
-						<li><?php esc_html_e( 'Choose post types and specific posts', 'custom-fields-snapshots' ); ?></li>
-						<li><?php esc_html_e( 'Choose whether to include global options', 'custom-fields-snapshots' ); ?></li>
-						<li><?php esc_html_e( 'Review your selections', 'custom-fields-snapshots' ); ?></li>
-						<li><?php esc_html_e( 'Click "Export Snapshot" to download the JSON file', 'custom-fields-snapshots' ); ?></li>
-					</ol>
-
-				</div>
 			</div>
 		</div>
 		<?php
@@ -512,6 +566,8 @@ class Admin {
 
 	/**
 	 * Enqueue the export assets.
+	 *
+	 * @since 1.0.0
 	 */
 	private function enqueue_export_assets() {
 		wp_enqueue_style(
@@ -546,10 +602,10 @@ class Admin {
 			'customFieldsSnapshots',
 			array(
 				'L10n' => array(
-					'selectFieldGroup'        => __( 'Please select at least one Field Group.', 'custom-fields-snapshots' ),
-					'selectPostTypeOrOptions' => __( 'Please select at least one Post Type or Options.', 'custom-fields-snapshots' ),
+					'selectFieldGroup' => __( 'Please select at least one Field Group.', 'custom-fields-snapshots' ),
+					'selectDataTypes'  => __( 'Please select at least one Post Type, User, User Role, or Options.', 'custom-fields-snapshots' ),
 					/* translators: %s: Post type name */
-					'selectPostId'            => __( 'Please select at least one post ID for post type: %s', 'custom-fields-snapshots' ),
+					'selectPostId'     => __( 'Please select at least one post ID for post type: %s', 'custom-fields-snapshots' ),
 				),
 			)
 		);
@@ -557,6 +613,8 @@ class Admin {
 
 	/**
 	 * Render the field groups selection.
+	 *
+	 * @since 1.0.0
 	 */
 	private function render_field_groups_selection() {
 		$field_groups = acf_get_field_groups();
@@ -594,6 +652,8 @@ class Admin {
 	/**
 	 * Render the selection of post types for export.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $type The type of post types to render ('public' or 'private').
 	 */
 	private function render_post_types_selection( $type = 'public' ) {
@@ -608,10 +668,24 @@ class Admin {
 			}
 		);
 
-		// Apply the post types filter.
+		/**
+		 * Filters the post types to be exported.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $post_types The post types to be exported.
+		 * @param string $type The type of post types to render ('public' or 'private').
+		 */
 		$post_types = apply_filters( sprintf( 'custom_fields_snapshots_export_%s_post_types', sanitize_key( $type ) ), $post_types );
 
-		// Define excluded post types.
+		/**
+		 * Filters the post types to be excluded from export.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $excluded_post_types The post types to be excluded from export.
+		 * @param string $type The type of post types to render ('public' or 'private').
+		 */
 		$excluded_post_types = apply_filters(
 			sprintf( 'custom_fields_snapshots_export_%s_excluded_post_types', sanitize_key( $type ) ),
 			( 'public' === $type )
@@ -695,6 +769,7 @@ class Admin {
 							'orderby'        => $orderby,
 						)
 					);
+
 					foreach ( $posts as $post ) :
 						?>
 						<label>
@@ -703,7 +778,7 @@ class Admin {
 							$post_title = get_the_title( $post );
 							$post_id    = absint( $post->ID );
 
-							/* translators: %d: Post ID */
+							/* translators: %d: Item ID (could be Post ID or User ID) */
 							$id_string = sprintf( __( 'ID: %d', 'custom-fields-snapshots' ), $post_id );
 
 							$date_string = '';
@@ -753,7 +828,123 @@ class Admin {
 	}
 
 	/**
+	 * Render the selection of user roles for export.
+	 *
+	 * @since 1.1.0
+	 */
+	private function render_user_roles_selection() {
+		/**
+		 * Filters the user roles to be exported.
+		 *
+		 * @since 1.1.0
+		 *
+		 * @param array $roles The user roles to be exported.
+		 */
+		$roles = apply_filters( 'custom_fields_snapshots_export_user_roles', wp_roles()->get_names() );
+
+		if ( empty( $roles ) ) {
+			esc_html_e( 'No user roles found.', 'custom-fields-snapshots' );
+			return;
+		}
+
+		?>
+		<div class="user-selection">
+			<label>
+				<input type="checkbox" class="post-type-checkbox user-roles-checkbox" data-type="user-roles">
+				<?php esc_html_e( 'User Roles', 'custom-fields-snapshots' ); ?>
+			</label>
+			<div class="user-roles-selection" style="margin-left: 20px; display: none;">
+				<label style="font-weight: bold;">
+					<input type="checkbox" class="select-all-users" data-type="roles">
+					<?php esc_html_e( 'All', 'custom-fields-snapshots' ); ?>
+				</label>
+				<?php foreach ( $roles as $role_value => $role_name ) : ?>
+					<label>
+						<input type="checkbox" name="user_roles[]" value="<?php echo esc_attr( $role_value ); ?>" class="post-id-checkbox">
+						<?php echo esc_html( translate_user_role( $role_name ) ); ?>
+					</label>
+				<?php endforeach; ?>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render the selection of users for export.
+	 *
+	 * @since 1.1.0
+	 */
+	private function render_users_selection() {
+		/**
+		 * Filters the users to be exported.
+		 *
+		 * @since 1.1.0
+		 *
+		 * @param array $users The users to be exported.
+		 */
+		$users = apply_filters( 'custom_fields_snapshots_export_users', get_users( array( 'fields' => array( 'ID', 'user_login', 'display_name' ) ) ) );
+
+		if ( empty( $users ) ) {
+			esc_html_e( 'No users found.', 'custom-fields-snapshots' );
+			return;
+		}
+
+		?>
+		<div class="user-selection">
+			<label>
+				<input type="checkbox" class="post-type-checkbox users-checkbox" data-type="users">
+				<?php esc_html_e( 'Users', 'custom-fields-snapshots' ); ?>
+			</label>
+			<div class="user-ids-selection" style="margin-left: 20px; display: none;">
+				<label style="font-weight: bold;">
+					<input type="checkbox" class="select-all-users" data-type="users">
+					<?php esc_html_e( 'All', 'custom-fields-snapshots' ); ?>
+				</label>
+				<?php foreach ( $users as $user ) : ?>
+					<label>
+						<input type="checkbox" name="users[]" value="<?php echo esc_attr( $user->ID ); ?>" class="post-id-checkbox">
+						<?php
+						$post_title = $user->display_name;
+						$post_id    = absint( $user->ID );
+
+						/* translators: %d: Item ID (could be Post ID or User ID) */
+						$id_string = sprintf( __( 'ID: %d', 'custom-fields-snapshots' ), $post_id );
+
+						/* translators: %s: Username */
+						$tooltip_content = sprintf( __( 'Username: %s', 'custom-fields-snapshots' ), $user->user_login );
+
+						/* translators: 1: User display name, 2: Tooltip content with user information */
+						$output = sprintf(
+							'<div class="custom-fields-snapshot-post-item">
+								<span class="post-title">%1$s</span>
+								<span class="tooltip">
+									<span class="dashicons dashicons-info"></span>
+									<span class="tooltiptext">%2$s</span>
+								</span>
+							</div>',
+							esc_html( $post_title ),
+							esc_html( $id_string . "\n" . $tooltip_content )
+						);
+
+						echo wp_kses(
+							$output,
+							array(
+								'div'  => array( 'class' => array() ),
+								'span' => array( 'class' => array() ),
+							)
+						);
+						?>
+					</label>
+				<?php endforeach; ?>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Handle AJAX import.
+	 *
+	 * @since 1.0.0
 	 */
 	public function ajax_import() {
 		global $wp_filesystem;
@@ -861,13 +1052,30 @@ class Admin {
 
 		$rollback = isset( $_POST['rollback_changes'] ) ? (bool) $_POST['rollback_changes'] : false;
 
+		/**
+		 * Fires before importing the field data.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $json_data The JSON data to import.
+		 */
 		do_action( 'custom_fields_snapshots_import_pre', $json_data );
 
 		$import_result = $this->importer->import_field_data( $json_data, $rollback );
 
 		if ( $import_result ) {
+			/**
+			 * Fires after importing the field data.
+			 *
+			 * @since 1.0.0
+			 */
 			do_action( 'custom_fields_snapshots_import_complete' );
 		} else {
+			/**
+			 * Fires when the import process fails.
+			 *
+			 * @since 1.0.0
+			 */
 			do_action( 'custom_fields_snapshots_import_failed' );
 		}
 
@@ -894,6 +1102,8 @@ class Admin {
 	/**
 	 * Validate the structure of the imported data.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param array $data The data to validate.
 	 * @return bool True if the structure is valid, false otherwise.
 	 */
@@ -912,14 +1122,16 @@ class Admin {
 					return false;
 				}
 
-				foreach ( $field_data as $context => $value ) {
-					if ( 'option' === $context ) {
-						if ( ! $this->validate_option_value( $value ) ) {
-							return false;
-						}
-					} elseif ( ! $this->is_valid_post_type_data( $value ) ) {
-						return false;
-					}
+				if ( isset( $field_data['options'] ) && ! $this->validate_option_value( $field_data['options'] ) ) {
+					return false;
+				}
+
+				if ( isset( $field_data['users'] ) && ! $this->is_valid_user_data( $field_data['users'] ) ) {
+					return false;
+				}
+
+				if ( isset( $field_data['post_types'] ) && ! $this->is_valid_post_types_data( $field_data['post_types'] ) ) {
+					return false;
 				}
 			}
 		}
@@ -929,6 +1141,8 @@ class Admin {
 
 	/**
 	 * Validate a group key and its fields.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param mixed $group_key The group key to validate.
 	 * @param mixed $fields    The fields to validate.
@@ -940,6 +1154,8 @@ class Admin {
 
 	/**
 	 * Validate a field name and its data.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param mixed $field_name The field name to validate.
 	 * @param mixed $field_data The field data to validate.
@@ -954,6 +1170,8 @@ class Admin {
 	 *
 	 * This function recursively validates option values, ensuring they are of
 	 * acceptable types (array, string, integer, boolean, null, or object).
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param mixed $value The value to validate.
 	 * @return bool True if the value is valid, false otherwise.
@@ -978,6 +1196,8 @@ class Admin {
 	/**
 	 * Validate post type data.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param mixed $value The value to validate.
 	 * @return bool True if valid, false otherwise.
 	 */
@@ -996,7 +1216,59 @@ class Admin {
 	}
 
 	/**
+	 * Validate post types data structure.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $post_types_data The post types data to validate.
+	 * @return bool True if valid, false otherwise.
+	 */
+	private function is_valid_post_types_data( $post_types_data ) {
+		if ( ! is_array( $post_types_data ) ) {
+			return false;
+		}
+
+		foreach ( $post_types_data as $post_type => $posts ) {
+			if ( ! is_string( $post_type ) || ! is_array( $posts ) ) {
+				return false;
+			}
+
+			foreach ( $posts as $post_id => $value ) {
+				if ( ! is_int( $post_id ) || ! $this->validate_option_value( $value ) ) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validate user data structure.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param array $user_data The user data to validate.
+	 * @return bool True if valid, false otherwise.
+	 */
+	private function is_valid_user_data( $user_data ) {
+		if ( ! is_array( $user_data ) ) {
+			return false;
+		}
+
+		foreach ( $user_data as $user_id => $value ) {
+			if ( ! is_int( $user_id ) || ! $this->validate_option_value( $value ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Handle export action.
+	 *
+	 * @since 1.0.0
 	 */
 	public function handle_export() {
 		$nonce = isset( $_POST['custom-fields-snapshots-export-nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['custom-fields-snapshots-export-nonce'] ) ) : '';
@@ -1009,24 +1281,37 @@ class Admin {
 			wp_die( esc_html__( 'Insufficient permissions', 'custom-fields-snapshots' ) );
 		}
 
+		$exports = array(
+			'post_types' => array(),
+			'post_ids'   => array(),
+			'options'    => false,
+			'users'      => array(
+				'roles' => array(),
+				'ids'   => array(),
+			),
+		);
+
 		$field_groups = isset( $_POST['field_groups'] ) && is_array( $_POST['field_groups'] )
 			? array_map( 'sanitize_text_field', wp_unslash( $_POST['field_groups'] ) )
 			: array();
 
-		$post_types = isset( $_POST['post_types'] ) && is_array( $_POST['post_types'] )
+		$exports['options'] = filter_input( INPUT_POST, 'options', FILTER_VALIDATE_BOOLEAN );
+
+		$exports['post_types'] = isset( $_POST['post_types'] ) && is_array( $_POST['post_types'] )
 			? array_map( 'sanitize_key', wp_unslash( $_POST['post_types'] ) )
 			: array();
 
-		$post_ids = isset( $_POST['post_ids'] ) && is_array( $_POST['post_ids'] )
+		$exports['post_ids'] = isset( $_POST['post_ids'] ) && is_array( $_POST['post_ids'] )
 			? $this->sanitize_post_ids( wp_unslash( $_POST['post_ids'] ) ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			: array();
 
-		$export_options = array_search( 'options', $post_types, true );
+		$exports['users']['roles'] = isset( $_POST['user_roles'] ) && is_array( $_POST['user_roles'] )
+			? array_map( 'sanitize_key', wp_unslash( $_POST['user_roles'] ) )
+			: array();
 
-		if ( false !== $export_options ) {
-			unset( $post_types[ $export_options ] );
-			$export_options = true;
-		}
+		$exports['users']['ids'] = isset( $_POST['users'] ) && is_array( $_POST['users'] )
+			? array_map( 'absint', wp_unslash( $_POST['users'] ) )
+			: array();
 
 		$errors = array();
 
@@ -1034,12 +1319,18 @@ class Admin {
 			$errors[] = __( 'Please select at least one Field Group.', 'custom-fields-snapshots' );
 		}
 
-		if ( ! $export_options && empty( $post_types ) ) {
-			$errors[] = __( 'Please select at least one Post Type.', 'custom-fields-snapshots' );
+		if ( ! $exports['options'] &&
+			empty( $exports['post_types'] ) &&
+			empty( $exports['users']['roles'] ) &&
+			empty( $exports['users']['ids'] ) ) {
+			$errors[] = __( 'Please select at least one Post Type, User, User Role, or Options.', 'custom-fields-snapshots' );
 		}
 
-		if ( ! $export_options && empty( $post_ids ) ) {
-			$errors[] = __( 'Please select at least one post ID.', 'custom-fields-snapshots' );
+		if ( ! $exports['options'] &&
+			empty( $exports['post_ids'] ) &&
+			empty( $exports['users']['roles'] ) &&
+			empty( $exports['users']['ids'] ) ) {
+			$errors[] = __( 'Please select at least one Post ID, User ID, or User Role.', 'custom-fields-snapshots' );
 		}
 
 		if ( ! empty( $errors ) ) {
@@ -1047,20 +1338,36 @@ class Admin {
 			wp_die( esc_html( $error_message ), esc_html( __( 'Export Validation Error', 'custom-fields-snapshots' ) ), array( 'back_link' => true ) );
 		}
 
-		do_action( 'custom_fields_snapshots_export_pre', $field_groups, $post_types, $post_ids, $export_options );
+		/**
+		 * Fires before exporting the field data.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $field_groups The field groups to export.
+		 * @param array $exports      The data types to export.
+		 */
+		do_action( 'custom_fields_snapshots_export_pre', $field_groups, $exports );
 
 		require_once CUSTOM_FIELDS_SNAPSHOTS_PLUGIN_DIR . 'includes/class-exporter.php';
 
 		$this->exporter = new Exporter();
 
-		$export_data = $this->exporter->export_field_groups( $field_groups, $post_types, $post_ids, $export_options );
+		$export_data = $this->exporter->export_field_groups( $field_groups, $exports );
 
 		// Check if there's any data to export.
 		if ( ! $this->exporter->has_data( $export_data ) ) {
-			wp_die( esc_html( __( 'No data to export for the selected field groups and post types/options.', 'custom-fields-snapshots' ) ), esc_html( __( 'Export Error', 'custom-fields-snapshots' ) ), array( 'back_link' => true ) );
+			wp_die( esc_html( __( 'No data to export for the selected field groups and post types, users, or options.', 'custom-fields-snapshots' ) ), esc_html( __( 'Export Error', 'custom-fields-snapshots' ) ), array( 'back_link' => true ) );
 		}
 
-		do_action( 'custom_fields_snapshots_export_post', $field_groups, $post_types, $post_ids, $export_options );
+		/**
+		 * Fires after exporting the field data.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $field_groups The field groups exported.
+		 * @param array $exports      The data types exported.
+		 */
+		do_action( 'custom_fields_snapshots_export_post', $field_groups, $exports );
 
 		$json_data = wp_json_encode( $export_data, JSON_PRETTY_PRINT );
 		$filename  = sanitize_file_name( 'data-export-' . gmdate( 'Y-m-d' ) ) . '.json';
@@ -1075,6 +1382,8 @@ class Admin {
 
 	/**
 	 * Sanitize an array of post IDs grouped by post type.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param array $post_ids An array of post IDs grouped by post type.
 	 * @return array Sanitized array of post IDs.
@@ -1106,6 +1415,8 @@ class Admin {
 
 	/**
 	 * Register plugin settings.
+	 *
+	 * @since 1.0.0
 	 */
 	public function register_settings() {
 		if ( $this->is_multisite ) {
@@ -1121,6 +1432,8 @@ class Admin {
 
 	/**
 	 * Register network-wide settings.
+	 *
+	 * @since 1.0.0
 	 */
 	private function register_network_settings() {
 		add_site_option( 'custom_fields_snapshots_delete_plugin_data', false );
@@ -1154,6 +1467,8 @@ class Admin {
 
 	/**
 	 * Register site-specific settings.
+	 *
+	 * @since 1.0.0
 	 */
 	private function register_site_specific_settings() {
 		register_setting(
@@ -1162,7 +1477,7 @@ class Admin {
 			array(
 				'type'              => 'boolean',
 				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
+				'sanitize_callback' => array( $this, 'sanitize_site_settings' ),
 				'show_in_rest'      => true,
 			)
 		);
@@ -1185,6 +1500,8 @@ class Admin {
 
 	/**
 	 * Register single-site delete data setting.
+	 *
+	 * @since 1.0.0
 	 */
 	private function register_single_site_delete_data_setting() {
 		register_setting(
@@ -1193,7 +1510,7 @@ class Admin {
 			array(
 				'type'              => 'boolean',
 				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
+				'sanitize_callback' => array( $this, 'sanitize_site_settings' ),
 				'show_in_rest'      => true,
 			)
 		);
@@ -1208,7 +1525,45 @@ class Admin {
 	}
 
 	/**
+	 * Sanitizes and validates site-specific settings.
+	 *
+	 * This function sanitizes the input value to a boolean and adds a settings
+	 * error message if any setting has changed. It ensures the message is only
+	 * added once per settings update.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return bool The sanitized boolean value.
+	 */
+	public function sanitize_site_settings( $value ) {
+		static $updated = false;
+
+		$sanitized_value = rest_sanitize_boolean( $value );
+		$current_filter  = current_filter();
+		$prefix          = 'sanitize_option_';
+		$option_name     = ( strpos( $current_filter, $prefix ) === 0 ) ? substr( $current_filter, strlen( $prefix ) ) : $current_filter;
+		$old_value       = rest_sanitize_boolean( get_option( $option_name ) );
+
+		if ( ! $updated && $old_value !== $sanitized_value ) {
+			add_settings_error(
+				'custom_fields_snapshots_messages',
+				'settings_updated',
+				__( 'Settings updated.', 'custom-fields-snapshots' ),
+				'updated'
+			);
+
+			$updated = true;
+		}
+
+		return $sanitized_value;
+	}
+
+
+	/**
 	 * Render the enable logging field.
+	 *
+	 * @since 1.0.0
 	 */
 	public function render_enable_logging_field() {
 		$event_logging = get_option( 'custom_fields_snapshots_event_logging', false );
@@ -1226,6 +1581,8 @@ class Admin {
 
 	/**
 	 * Render the delete plugin data on uninstall field.
+	 *
+	 * @since 1.0.0
 	 */
 	public function render_delete_data_field() {
 		$delete_data = $this->is_multisite
@@ -1249,6 +1606,8 @@ class Admin {
 	 * This function retrieves the user's admin color preference and returns
 	 * the corresponding primary color. If the color scheme is not found or
 	 * is invalid, it returns a default color.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @return string The hex color code for the admin primary color.
 	 */

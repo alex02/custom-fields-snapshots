@@ -18,6 +18,11 @@
     height: min-content;
 }
 
+.custom-fields-snapshots .contribute-box {
+	display: flex;
+	gap: 0.5em;
+}
+
 .custom-fields-snapshots .form-table .description {
 	width: 50%;
 }

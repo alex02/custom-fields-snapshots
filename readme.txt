@@ -3,7 +3,7 @@ Contributors: alexgeorgiev
 Tags: acf, custom fields, export, import, snapshot
 Requires at least: 6.0
 Tested up to: 6.6
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -12,17 +12,16 @@ Create backups of your Advanced Custom Fields data for easy migration, version c
 
 == Description ==
 
-Custom Fields Snapshots allow you to easily create backups of your Advanced Custom Fields (ACF) data by exporting selected field groups, post types, and options. These snapshots enable version control, make it easier to share setups with team members, assist with migrations between WordPress environments, and enable quick restoration of previous configurations.
+Custom Fields Snapshots allow you to easily create backups of your Advanced Custom Fields (ACF) data by exporting selected field groups, post types, users, and options. These snapshots enable version control, make it easier to share setups with team members, assist with migrations between WordPress environments, and enable quick restoration of previous configurations.
 
 **Important: This plugin requires Advanced Custom Fields (ACF) or ACF Pro to be installed and activated.**
 
-Key Features:
-
-* Export ACF field data for specific field groups, post types, and global options
-* Import ACF field data from JSON snapshots
-* Fully compatible with all ACF field types, including repeaters and flexible content
+= Features =
+* Export ACF field data for specific field groups, post types, users, and options
+* Import ACF field data from JSON files
+* Fully compatible with all ACF field types, including repeaters, galleries, and flexible content
 * Supports nested fields within complex field group structures
-* Selective export: choose which field groups, post types, and individual posts to include.
+* Selective export: choose which field groups, post types, and individual posts, users or user roles to include.
 * Rollbacks: Automatically revert changes if an import fails.
 * Detailed logging for import processes.
 * Developer-friendly: Extensive hook system for customization, including filters for data modification during export/import and actions for post-import processing.
@@ -32,8 +31,8 @@ Custom Fields Snapshots simplifies ACF data management, offering a reliable solu
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/custom-fields-snapshots` directory, or install the plugin through the WordPress plugins screen directly.
-2. Ensure that Advanced Custom Fields (ACF) or ACF Pro is installed and activated.
+1. Ensure that Advanced Custom Fields (ACF) or ACF Pro is installed and activated.
+2. Upload the plugin files to the `/wp-content/plugins/custom-fields-snapshots` directory, or install the plugin through the WordPress plugins screen directly.
 3. Activate the plugin through the 'Plugins' screen in WordPress.
 4. Use the Field Snapshots screen to configure the plugin and manage your snapshots.
 
@@ -56,7 +55,18 @@ Absolutely! This is one of the main features of the plugin. Just make sure both 
 
 = What kind of fields and data can I export? =
 
-You can export any field types supported by ACF or ACF Pro, including repeater fields and flexible content, from post types and options.
+You can export any field types supported by ACF or ACF Pro, including repeater fields, galleries, and flexible content, from post types, users and options.
+
+= Which ACF versions are compatible with the plugin? =
+
+Custom Fields Snapshots is designed to work with both ACF Free and ACF Pro. While it should be compatible with versions prior to 5.0 due to its use of core ACF functions, I officially maintain and test compatibility with:
+
+* The latest version of ACF (free and pro)
+* One version prior to the latest
+
+For optimal performance and compatibility, I recommend using the most recent version of ACF. However, if you're using an older version, the plugin may still function correctly with your setup.
+
+If you encounter any compatibility issues, please don't hesitate to reach out for support.
 
 = How does the rollback feature work? =
 
@@ -72,26 +82,33 @@ Yes, the plugin supports WordPress Multisite installations, allowing you to mana
 
 == Screenshots ==
 
-1. Export interface - Select field groups, post types and/or global options to export
+1. Export interface - Select field groups, post types, users, user roles and/or global options to export
 2. Import interface - Upload and import your snapshot file
 3. Settings page - Configure plugin settings
 
 == Changelog ==
+
+= 1.1.0 =
+* Added support for exporting user field data.
+* Restructured import/export processes to avoid naming conflicts.
+* Enhanced data handling for smoother import/export operations.
+* Added a success message when saving settings.
 
 = 1.0.0 =
 * Initial release
 
 == Upgrade Notice ==
 
+= 1.1.0 =
+**This version introduces a new export/import structure that prevents naming conflicts. Export files from earlier versions are not compatible. Please re-export your data after updating.**
+
+* Support for exporting user field data
+* Improved import/export processes
+* Added success message for settings
+
 = 1.0.0 =
 This is the initial release of Custom Fields Snapshots.
 
 == Support ==
 
-For support, please use the support forum on WordPress.org or the [GitHub repository](https://github.com/alex02/custom-fields-snapshots).
-
-== Future Plans ==
-
-* Snapshot manager: Store snapshots on your server with an easy interface to manage, download, and restore snapshots.
-* Scheduled snapshots: Automate the process of creating snapshots at regular intervals.
-* WP-CLI support: Command-line interface for advanced users and automation.
+For support, please use the [support forum](https://wordpress.org/support/plugin/custom-fields-snapshots/) on WordPress.org or the [GitHub repository](https://github.com/alex02/custom-fields-snapshots).
