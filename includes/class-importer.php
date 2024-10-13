@@ -156,111 +156,6 @@ class Importer {
 	}
 
 	/**
-	 * Import fields for users.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param string $field_name    The field name.
-	 * @param array  $user_data     The user data to import.
-	 * @param array  $original_data Reference to the original data array for potential rollback.
-	 * @param string $group_key     The field group key.
-	 * @return bool True on success, false on failure.
-	 */
-	private function import_user_fields( $field_name, $user_data, &$original_data, $group_key ) {
-		foreach ( $user_data as $user_id => $value ) {
-			$user_id = absint( $user_id );
-			if ( ! $user_id ) {
-				$this->logger->log(
-					'error',
-					/* translators: %1$s: field name, %2$s: group key */
-					sprintf( __( 'Invalid user ID for field "%1$s" in group "%2$s"', 'custom-fields-snapshots' ), $field_name, $group_key )
-				);
-				return false;
-			}
-
-			$user = get_userdata( $user_id );
-			if ( ! $user ) {
-				$this->logger->log(
-					'error',
-					/* translators: %1$d: user ID, %2$s: field name */
-					sprintf( __( 'User with ID %1$d does not exist. Cannot update field "%2$s"', 'custom-fields-snapshots' ), $user_id, $field_name )
-				);
-				return false;
-			}
-
-			$field_object   = get_field_object( $field_name, 'user_' . $user_id );
-			$existing_value = get_field( $field_name, 'user_' . $user_id, $this->processor->maybe_format_value( $field_object ?? array() ) );
-
-			$original_data[ $group_key ][ $field_name ]['users'][ $user_id ] = $existing_value;
-
-			/**
-			 * Filters the value of a user field before importing.
-			 *
-			 * @since 1.1.0
-			 *
-			 * @param mixed  $value          The field value.
-			 * @param mixed  $existing_value The existing field value.
-			 * @param string $group_key      The field group key.
-			 * @param int    $user_id        The user ID.
-			 */
-			$value = apply_filters( "custom_fields_snapshots_import_user_field_{$field_name}_value", $value, $existing_value, $group_key, $user_id );
-
-			if ( $existing_value === $value ) {
-				$this->logger->log(
-					'info',
-					/* translators: %1$s: field name, %2$d: user ID */
-					sprintf( __( 'Field "%1$s" for user ID %2$d has the same value. Skipping update.', 'custom-fields-snapshots' ), $field_name, $user_id )
-				);
-				continue;
-			}
-
-			$update_result = update_field( $field_name, $value, 'user_' . $user_id );
-
-			if ( false === $update_result && $this->verify_update_failed( $field_name, $existing_value, 'user_' . $user_id ) ) {
-				$this->logger->log(
-					'error',
-					/* translators: %1$s: field name, %2$d: user ID */
-					sprintf( __( 'Failed to update field "%1$s" for user ID %2$d.', 'custom-fields-snapshots' ), $field_name, $user_id )
-				);
-
-				/**
-				 * Fires when a user field import fails.
-				 *
-				 * @since 1.1.0
-				 *
-				 * @param string $field_name The field name.
-				 * @param mixed  $value      The field value.
-				 * @param string $group_key  The field group key.
-				 * @param int    $user_id    The user ID.
-				 */
-				do_action( 'custom_fields_snapshots_import_user_field_failed', $field_name, $value, $group_key, $user_id );
-
-				return false;
-			}
-
-			$this->logger->log(
-				'success',
-				/* translators: %1$s: field name, %2$d: user ID */
-				sprintf( __( 'Successfully updated field "%1$s" for user ID %2$d.', 'custom-fields-snapshots' ), $field_name, $user_id )
-			);
-
-			/**
-			 * Fires when a user field import is successful.
-			 *
-			 * @since 1.1.0
-			 *
-			 * @param string $field_name The field name.
-			 * @param mixed  $value      The field value.
-			 * @param string $group_key  The field group key.
-			 * @param int    $user_id    The user ID.
-			 */
-			do_action( 'custom_fields_snapshots_import_user_field_complete', $field_name, $value, $group_key, $user_id );
-		}
-
-		return true;
-	}
-
-	/**
 	 * Import a field for an options page.
 	 *
 	 * @since 1.1.0
@@ -436,6 +331,111 @@ class Importer {
 		 * @param int    $post_id    The post ID.
 		 */
 		do_action( 'custom_fields_snapshots_import_field_complete', $field_name, $value, $group_key, $post_type, $post_id );
+
+		return true;
+	}
+
+	/**
+	 * Import fields for users.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $field_name    The field name.
+	 * @param array  $user_data     The user data to import.
+	 * @param array  $original_data Reference to the original data array for potential rollback.
+	 * @param string $group_key     The field group key.
+	 * @return bool True on success, false on failure.
+	 */
+	private function import_user_fields( $field_name, $user_data, &$original_data, $group_key ) {
+		foreach ( $user_data as $user_id => $value ) {
+			$user_id = absint( $user_id );
+			if ( ! $user_id ) {
+				$this->logger->log(
+					'error',
+					/* translators: %1$s: field name, %2$s: group key */
+					sprintf( __( 'Invalid user ID for field "%1$s" in group "%2$s"', 'custom-fields-snapshots' ), $field_name, $group_key )
+				);
+				return false;
+			}
+
+			$user = get_userdata( $user_id );
+			if ( ! $user ) {
+				$this->logger->log(
+					'error',
+					/* translators: %1$d: user ID, %2$s: field name */
+					sprintf( __( 'User with ID %1$d does not exist. Cannot update field "%2$s"', 'custom-fields-snapshots' ), $user_id, $field_name )
+				);
+				return false;
+			}
+
+			$field_object   = get_field_object( $field_name, 'user_' . $user_id );
+			$existing_value = get_field( $field_name, 'user_' . $user_id, $this->processor->maybe_format_value( $field_object ?? array() ) );
+
+			$original_data[ $group_key ][ $field_name ]['users'][ $user_id ] = $existing_value;
+
+			/**
+			 * Filters the value of a user field before importing.
+			 *
+			 * @since 1.1.0
+			 *
+			 * @param mixed  $value          The field value.
+			 * @param mixed  $existing_value The existing field value.
+			 * @param string $group_key      The field group key.
+			 * @param int    $user_id        The user ID.
+			 */
+			$value = apply_filters( "custom_fields_snapshots_import_user_field_{$field_name}_value", $value, $existing_value, $group_key, $user_id );
+
+			if ( $existing_value === $value ) {
+				$this->logger->log(
+					'info',
+					/* translators: %1$s: field name, %2$d: user ID */
+					sprintf( __( 'Field "%1$s" for user ID %2$d has the same value. Skipping update.', 'custom-fields-snapshots' ), $field_name, $user_id )
+				);
+				continue;
+			}
+
+			$update_result = update_field( $field_name, $value, 'user_' . $user_id );
+
+			if ( false === $update_result && $this->verify_update_failed( $field_name, $existing_value, 'user_' . $user_id ) ) {
+				$this->logger->log(
+					'error',
+					/* translators: %1$s: field name, %2$d: user ID */
+					sprintf( __( 'Failed to update field "%1$s" for user ID %2$d.', 'custom-fields-snapshots' ), $field_name, $user_id )
+				);
+
+				/**
+				 * Fires when a user field import fails.
+				 *
+				 * @since 1.1.0
+				 *
+				 * @param string $field_name The field name.
+				 * @param mixed  $value      The field value.
+				 * @param string $group_key  The field group key.
+				 * @param int    $user_id    The user ID.
+				 */
+				do_action( 'custom_fields_snapshots_import_user_field_failed', $field_name, $value, $group_key, $user_id );
+
+				return false;
+			}
+
+			$this->logger->log(
+				'success',
+				/* translators: %1$s: field name, %2$d: user ID */
+				sprintf( __( 'Successfully updated field "%1$s" for user ID %2$d.', 'custom-fields-snapshots' ), $field_name, $user_id )
+			);
+
+			/**
+			 * Fires when a user field import is successful.
+			 *
+			 * @since 1.1.0
+			 *
+			 * @param string $field_name The field name.
+			 * @param mixed  $value      The field value.
+			 * @param string $group_key  The field group key.
+			 * @param int    $user_id    The user ID.
+			 */
+			do_action( 'custom_fields_snapshots_import_user_field_complete', $field_name, $value, $group_key, $user_id );
+		}
 
 		return true;
 	}

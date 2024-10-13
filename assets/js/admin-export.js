@@ -17,7 +17,7 @@ jQuery(function($) {
     // Handle 'All' checkboxes for post types and options
     function handleAllCheckbox(allSelector, itemSelectors) {
         var $allCheckbox = $(allSelector);
-        var $itemCheckboxes = $(itemSelectors);
+        var $itemCheckboxes = $(itemSelectors).filter(':not([disabled])');
 
         $allCheckbox.on('change', function() {
             $itemCheckboxes.prop('checked', this.checked).trigger('change');

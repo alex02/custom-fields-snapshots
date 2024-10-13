@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Custom Fields Snapshots 1.1.0\n"
+"Project-Id-Version: Custom Fields Snapshots 1.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/custom-fields-snapshots\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-12T15:20:04+00:00\n"
+"POT-Creation-Date: 2024-10-13T10:40:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: custom-fields-snapshots\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: custom-fields-snapshots.php
 #: includes/class-admin.php:100
 #: includes/class-admin.php:123
-#: includes/class-admin.php:267
+#: includes/class-admin.php:295
 msgid "Custom Fields Snapshots"
 msgstr ""
 
@@ -42,372 +42,391 @@ msgstr ""
 msgid "Field Snapshots"
 msgstr ""
 
-#: includes/class-admin.php:141
-#: includes/class-admin.php:182
-#: includes/class-admin.php:255
-#: includes/class-admin.php:257
+#: includes/class-admin.php:142
+#: includes/class-admin.php:190
+#: includes/class-admin.php:270
+#: includes/class-admin.php:279
+#: includes/class-admin.php:1366
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: includes/class-admin.php:151
+#: includes/class-admin.php:143
+#: includes/class-admin.php:191
+#: includes/class-admin.php:271
+#: includes/class-admin.php:280
+#: includes/class-admin.php:1367
+msgid "Permission Error"
+msgstr ""
+
+#: includes/class-admin.php:158
 msgid "Save Network Settings"
 msgstr ""
 
-#: includes/class-admin.php:167
+#: includes/class-admin.php:174
 msgid "Configure network-wide settings for Custom Fields Snapshots."
 msgstr ""
 
-#: includes/class-admin.php:222
-#: includes/class-admin.php:223
-#: includes/class-admin.php:272
-#: includes/class-admin.php:348
-#: includes/class-admin.php:484
+#: includes/class-admin.php:236
+#: includes/class-admin.php:237
+#: includes/class-admin.php:300
+#: includes/class-admin.php:376
+#: includes/class-admin.php:512
 msgid "Export"
 msgstr ""
 
-#: includes/class-admin.php:231
-#: includes/class-admin.php:232
-#: includes/class-admin.php:273
-#: includes/class-admin.php:350
-#: includes/class-admin.php:486
+#: includes/class-admin.php:245
+#: includes/class-admin.php:246
+#: includes/class-admin.php:301
+#: includes/class-admin.php:378
+#: includes/class-admin.php:514
 msgid "Import"
 msgstr ""
 
-#: includes/class-admin.php:240
-#: includes/class-admin.php:241
-#: includes/class-admin.php:274
-#: includes/class-admin.php:352
-#: includes/class-admin.php:488
-#: includes/class-admin.php:1487
+#: includes/class-admin.php:254
+#: includes/class-admin.php:255
+#: includes/class-admin.php:302
+#: includes/class-admin.php:380
+#: includes/class-admin.php:516
+#: includes/class-admin.php:1592
 msgid "Settings"
 msgstr ""
 
-#: includes/class-admin.php:287
+#: includes/class-admin.php:315
 msgid "About"
 msgstr ""
 
-#: includes/class-admin.php:288
+#: includes/class-admin.php:316
 msgid "Custom Fields Snapshots allow you to easily create backups of your Advanced Custom Fields (ACF) data by exporting selected field groups, post types, users, and options. These snapshots enable version control, make it easier to share setups with team members, assist with migrations between WordPress environments, and enable quick restoration of previous configurations."
 msgstr ""
 
-#: includes/class-admin.php:290
+#: includes/class-admin.php:318
 msgid "Contribute"
 msgstr ""
 
-#: includes/class-admin.php:291
+#: includes/class-admin.php:319
 msgid "Support the development of this plugin:"
 msgstr ""
 
-#: includes/class-admin.php:295
+#: includes/class-admin.php:323
 msgid "Rate it on WordPress.org"
 msgstr ""
 
-#: includes/class-admin.php:299
+#: includes/class-admin.php:327
 msgid "Help translate it"
 msgstr ""
 
-#: includes/class-admin.php:316
+#: includes/class-admin.php:344
 msgid "Configure settings for Custom Fields Snapshots."
 msgstr ""
 
-#: includes/class-admin.php:345
-#: includes/class-admin.php:357
-#: includes/class-admin.php:382
-#: includes/class-admin.php:458
+#: includes/class-admin.php:373
+#: includes/class-admin.php:385
+#: includes/class-admin.php:410
+#: includes/class-admin.php:486
 msgid "Import Snapshot"
 msgstr ""
 
-#: includes/class-admin.php:365
-msgid "Drag & Drop your JSON file here or click to select"
-msgstr ""
-
-#: includes/class-admin.php:371
-msgid "Remove"
-msgstr ""
-
-#: includes/class-admin.php:377
-msgid "Rollback changes on failure"
-msgstr ""
-
-#: includes/class-admin.php:378
-msgid "In case the import process fails, all changes will be automatically reverted."
-msgstr ""
-
-#: includes/class-admin.php:392
-msgid "How To Use"
-msgstr ""
-
-#: includes/class-admin.php:395
-msgid "Back up your WordPress database"
-msgstr ""
-
-#: includes/class-admin.php:396
-msgid "Upload the snapshot JSON file (drag or select)"
-msgstr ""
-
-#: includes/class-admin.php:397
-msgid "Enable \"Rollback changes on failure\" (recommended)"
-msgstr ""
-
-#: includes/class-admin.php:398
-msgid "Click \"Import Snapshot\""
+#: includes/class-admin.php:393
+msgid "Drag & drop your JSON file here or click to select"
 msgstr ""
 
 #: includes/class-admin.php:399
+msgid "Remove"
+msgstr ""
+
+#: includes/class-admin.php:405
+msgid "Rollback changes on failure"
+msgstr ""
+
+#: includes/class-admin.php:406
+msgid "In case the import process fails, all changes will be automatically reverted."
+msgstr ""
+
+#: includes/class-admin.php:420
+msgid "How To Use"
+msgstr ""
+
+#: includes/class-admin.php:423
+msgid "Back up your WordPress database"
+msgstr ""
+
+#: includes/class-admin.php:424
+msgid "Upload the snapshot JSON file (drag or select)"
+msgstr ""
+
+#: includes/class-admin.php:425
+msgid "Enable \"Rollback changes on failure\" (recommended)"
+msgstr ""
+
+#: includes/class-admin.php:426
+msgid "Click \"Import Snapshot\""
+msgstr ""
+
+#: includes/class-admin.php:427
 msgid "Enable event logs in Settings if issues occur"
 msgstr ""
 
-#: includes/class-admin.php:402
+#: includes/class-admin.php:430
 msgid "While the import process is safe when using the rollback feature, it's always best to have a backup as an extra precaution."
 msgstr ""
 
-#: includes/class-admin.php:459
+#: includes/class-admin.php:487
 msgid "Importing..."
 msgstr ""
 
-#: includes/class-admin.php:460
+#: includes/class-admin.php:488
 msgid "Event Log"
 msgstr ""
 
-#: includes/class-admin.php:461
+#: includes/class-admin.php:489
 msgid "Please select a file to proceed."
 msgstr ""
 
-#: includes/class-admin.php:462
+#: includes/class-admin.php:490
 msgid "Invalid file type selected. Please select a JSON file."
 msgstr ""
 
-#: includes/class-admin.php:463
+#: includes/class-admin.php:491
 msgid "\"Rollback changes on failure\" is turned off. Are you sure you want to proceed?"
 msgstr ""
 
-#: includes/class-admin.php:464
+#: includes/class-admin.php:492
 msgid "An unknown error occurred. Please try again."
 msgstr ""
 
-#: includes/class-admin.php:479
-#: includes/class-admin.php:558
+#: includes/class-admin.php:507
+#: includes/class-admin.php:591
 msgid "Export Snapshot"
 msgstr ""
 
-#: includes/class-admin.php:498
+#: includes/class-admin.php:526
 msgid "Field Groups"
 msgstr ""
 
-#: includes/class-admin.php:505
+#: includes/class-admin.php:533
 msgid "Post Types, Users and Options"
 msgstr ""
 
-#: includes/class-admin.php:508
+#: includes/class-admin.php:536
 msgid "Public Post Types"
 msgstr ""
 
-#: includes/class-admin.php:515
+#: includes/class-admin.php:543
 msgid "Private Post Types"
 msgstr ""
 
-#: includes/class-admin.php:522
-msgid "Side-wide Data"
+#: includes/class-admin.php:550
+msgid "Site-wide Data"
 msgstr ""
 
 #. translators: %s: Post type label (e.g., "Public" or "Private")
-#: includes/class-admin.php:530
-msgid "All Side-wide Data"
+#: includes/class-admin.php:558
+msgid "All Site-wide Data"
 msgstr ""
 
-#: includes/class-admin.php:544
+#: includes/class-admin.php:573
 msgid "Options"
 msgstr ""
 
-#: includes/class-admin.php:546
-msgid "(ACF Pro required)"
+#: includes/class-admin.php:577
+msgid "ACF Pro required"
 msgstr ""
 
-#: includes/class-admin.php:605
-#: includes/class-admin.php:1319
+#: includes/class-admin.php:638
+#: includes/class-admin.php:1410
 msgid "Please select at least one Field Group."
 msgstr ""
 
-#: includes/class-admin.php:606
-#: includes/class-admin.php:1326
+#: includes/class-admin.php:639
+#: includes/class-admin.php:1417
 msgid "Please select at least one Post Type, User, User Role, or Options."
 msgstr ""
 
 #. translators: %s: Post type name
-#: includes/class-admin.php:608
+#: includes/class-admin.php:641
 msgid "Please select at least one post ID for post type: %s"
 msgstr ""
 
-#: includes/class-admin.php:623
+#: includes/class-admin.php:656
 msgid "No field groups found."
 msgstr ""
 
-#: includes/class-admin.php:631
+#: includes/class-admin.php:664
 msgid "All Field Groups"
 msgstr ""
 
+#. translators: %s: Field group key
+#: includes/class-admin.php:673
+msgid "Key: %s"
+msgstr ""
+
 #. translators: %s: Type of post types (e.g., 'public' or 'private')
-#: includes/class-admin.php:722
+#: includes/class-admin.php:763
 msgid "No %s post types found."
 msgstr ""
 
-#: includes/class-admin.php:726
+#: includes/class-admin.php:767
 msgid "Public"
 msgstr ""
 
-#: includes/class-admin.php:726
+#: includes/class-admin.php:767
 msgid "Private"
 msgstr ""
 
 #. translators: %s: Post type label (e.g., "Public" or "Private")
-#: includes/class-admin.php:734
+#: includes/class-admin.php:775
 msgid "All %s Post Types"
 msgstr ""
 
-#: includes/class-admin.php:749
-#: includes/class-admin.php:859
-#: includes/class-admin.php:901
+#. translators: %s: Slug (could be Post Type or User Role)
+#: includes/class-admin.php:805
+#: includes/class-admin.php:1002
+msgid "Slug: %s"
+msgstr ""
+
+#: includes/class-admin.php:809
+msgid "No posts found"
+msgstr ""
+
+#: includes/class-admin.php:832
+#: includes/class-admin.php:922
+#: includes/class-admin.php:997
 msgid "All"
 msgstr ""
 
 #. translators: %d: Item ID (could be Post ID or User ID)
-#: includes/class-admin.php:782
-#: includes/class-admin.php:911
+#: includes/class-admin.php:842
+#: includes/class-admin.php:932
 msgid "ID: %d"
 msgstr ""
 
-#: includes/class-admin.php:792
+#: includes/class-admin.php:852
 msgid "Published:"
 msgstr ""
 
-#: includes/class-admin.php:846
-msgid "No user roles found."
-msgstr ""
-
-#: includes/class-admin.php:854
-msgid "User Roles"
-msgstr ""
-
-#: includes/class-admin.php:888
-msgid "No users found."
-msgstr ""
-
-#: includes/class-admin.php:896
+#: includes/class-admin.php:916
 msgid "Users"
 msgstr ""
 
 #. translators: %s: Username
-#: includes/class-admin.php:914
+#: includes/class-admin.php:935
 msgid "Username: %s"
 msgstr ""
 
-#: includes/class-admin.php:957
-#: includes/class-admin.php:1281
-msgid "Insufficient permissions"
-msgstr ""
-
-#: includes/class-admin.php:965
-msgid "No file uploaded"
-msgstr ""
-
-#: includes/class-admin.php:983
-msgid "File upload failed. Please try again."
-msgstr ""
-
-#: includes/class-admin.php:989
-msgid "The uploaded file exceeds the maximum file size limit."
-msgstr ""
-
-#: includes/class-admin.php:992
-msgid "The file was only partially uploaded. Please try again."
-msgstr ""
-
-#: includes/class-admin.php:995
-msgid "No file was uploaded. Please select a file and try again."
-msgstr ""
-
-#: includes/class-admin.php:999
-msgid "Server error. Unable to save the uploaded file."
-msgstr ""
-
-#: includes/class-admin.php:1002
-msgid "File upload stopped by extension."
-msgstr ""
-
-#: includes/class-admin.php:1020
-msgid "Please upload a JSON file"
+#: includes/class-admin.php:991
+msgid "User Roles"
 msgstr ""
 
 #: includes/class-admin.php:1034
+msgid "Insufficient permissions"
+msgstr ""
+
+#: includes/class-admin.php:1042
+msgid "No file uploaded"
+msgstr ""
+
+#: includes/class-admin.php:1060
+msgid "File upload failed. Please try again."
+msgstr ""
+
+#: includes/class-admin.php:1066
+msgid "The uploaded file exceeds the maximum file size limit."
+msgstr ""
+
+#: includes/class-admin.php:1069
+msgid "The file was only partially uploaded. Please try again."
+msgstr ""
+
+#: includes/class-admin.php:1072
+msgid "No file was uploaded. Please select a file and try again."
+msgstr ""
+
+#: includes/class-admin.php:1076
+msgid "Server error. Unable to save the uploaded file."
+msgstr ""
+
+#: includes/class-admin.php:1079
+msgid "File upload stopped by extension."
+msgstr ""
+
+#: includes/class-admin.php:1097
+msgid "Please upload a JSON file"
+msgstr ""
+
+#: includes/class-admin.php:1111
 msgid "The uploaded file is not a valid JSON."
 msgstr ""
 
-#: includes/class-admin.php:1043
+#: includes/class-admin.php:1120
 msgid "The uploaded file has an invalid JSON structure."
 msgstr ""
 
-#: includes/class-admin.php:1088
+#: includes/class-admin.php:1165
 msgid "Import completed successfully"
 msgstr ""
 
-#: includes/class-admin.php:1096
+#: includes/class-admin.php:1173
 msgid "Import failed. View the event log for more details."
 msgstr ""
 
-#: includes/class-admin.php:1096
+#: includes/class-admin.php:1173
 msgid "Import failed. Enable the event log from the Settings tab for more details."
 msgstr ""
 
-#: includes/class-admin.php:1277
+#: includes/class-admin.php:1355
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/class-admin.php:1333
+#: includes/class-admin.php:1356
+msgid "Security Error"
+msgstr ""
+
+#: includes/class-admin.php:1424
 msgid "Please select at least one Post ID, User ID, or User Role."
 msgstr ""
 
-#: includes/class-admin.php:1338
+#: includes/class-admin.php:1431
 msgid "Export Validation Error"
 msgstr ""
 
-#: includes/class-admin.php:1359
+#: includes/class-admin.php:1458
 msgid "No data to export for the selected field groups and post types, users, or options."
 msgstr ""
 
-#: includes/class-admin.php:1359
+#: includes/class-admin.php:1459
 msgid "Export Error"
 msgstr ""
 
-#: includes/class-admin.php:1454
+#: includes/class-admin.php:1559
 msgid "Network Settings"
 msgstr ""
 
-#: includes/class-admin.php:1461
-#: includes/class-admin.php:1520
+#: includes/class-admin.php:1566
+#: includes/class-admin.php:1625
 msgid "Delete plugin data on uninstall"
 msgstr ""
 
-#: includes/class-admin.php:1494
+#: includes/class-admin.php:1599
 msgid "Event Logging"
 msgstr ""
 
-#: includes/class-admin.php:1552
+#: includes/class-admin.php:1657
 msgid "Settings updated."
 msgstr ""
 
-#: includes/class-admin.php:1574
+#: includes/class-admin.php:1678
 msgid "Show detailed log after the import process"
 msgstr ""
 
-#: includes/class-admin.php:1577
+#: includes/class-admin.php:1681
 msgid "When enabled, a detailed log will be displayed after the import process."
 msgstr ""
 
-#: includes/class-admin.php:1595
+#: includes/class-admin.php:1698
 msgid "Delete all plugin data when uninstalling"
 msgstr ""
 
-#: includes/class-admin.php:1598
+#: includes/class-admin.php:1701
 msgid "If enabled, all plugin-specific settings will be removed upon uninstallation. This will not affect your ACF field data or content created using the plugin - only the plugin's internal settings will be deleted."
 msgstr ""
 
@@ -449,74 +468,74 @@ msgstr ""
 msgid "Invalid data structure for field \"%1$s\" in group \"%2$s\""
 msgstr ""
 
-#. translators: %1$s: field name, %2$s: group key
-#: includes/class-importer.php:176
-msgid "Invalid user ID for field \"%1$s\" in group \"%2$s\""
-msgstr ""
-
-#. translators: %1$d: user ID, %2$s: field name
-#: includes/class-importer.php:186
-msgid "User with ID %1$d does not exist. Cannot update field \"%2$s\""
-msgstr ""
-
-#. translators: %1$s: field name, %2$d: user ID
-#: includes/class-importer.php:212
-msgid "Field \"%1$s\" for user ID %2$d has the same value. Skipping update."
-msgstr ""
-
-#. translators: %1$s: field name, %2$d: user ID
-#: includes/class-importer.php:223
-msgid "Failed to update field \"%1$s\" for user ID %2$d."
-msgstr ""
-
-#. translators: %1$s: field name, %2$d: user ID
-#: includes/class-importer.php:244
-msgid "Successfully updated field \"%1$s\" for user ID %2$d."
-msgstr ""
-
 #. translators: %s: option name
-#: includes/class-importer.php:294
+#: includes/class-importer.php:189
 msgid "Option \"%s\" has the same value. Skipping update."
 msgstr ""
 
 #. translators: %s: option name
-#: includes/class-importer.php:303
+#: includes/class-importer.php:198
 msgid "Failed to update option \"%s\"."
 msgstr ""
 
 #. translators: %s: field name
-#: includes/class-importer.php:320
+#: includes/class-importer.php:215
 msgid "Successfully updated option \"%s\""
 msgstr ""
 
 #. translators: %1$s: field name, %2$s: group key
-#: includes/class-importer.php:354
+#: includes/class-importer.php:249
 msgid "Invalid post ID for field \"%1$s\" in group \"%2$s\""
 msgstr ""
 
 #. translators: %1$d: post ID, %2$s: field name
-#: includes/class-importer.php:361
+#: includes/class-importer.php:256
 msgid "Permission denied for post ID %1$d. Cannot edit field \"%2$s\""
 msgstr ""
 
 #. translators: %1$d: post ID, %2$s: field name
-#: includes/class-importer.php:370
+#: includes/class-importer.php:265
 msgid "Post with ID %1$d does not exist. Cannot update field \"%2$s\""
 msgstr ""
 
 #. translators: %1$s: field name, %2$d: post ID
-#: includes/class-importer.php:398
+#: includes/class-importer.php:293
 msgid "Field \"%1$s\" for post ID %2$d has the same value. Skipping update."
 msgstr ""
 
 #. translators: %1$s: field name, %2$d: post ID
-#: includes/class-importer.php:406
+#: includes/class-importer.php:301
 msgid "Failed to update field \"%1$s\" for post ID %2$d."
 msgstr ""
 
 #. translators: %1$s: field name, %2$d: post ID
-#: includes/class-importer.php:425
+#: includes/class-importer.php:320
 msgid "Successfully updated field \"%1$s\" for post ID %2$d."
+msgstr ""
+
+#. translators: %1$s: field name, %2$s: group key
+#: includes/class-importer.php:356
+msgid "Invalid user ID for field \"%1$s\" in group \"%2$s\""
+msgstr ""
+
+#. translators: %1$d: user ID, %2$s: field name
+#: includes/class-importer.php:366
+msgid "User with ID %1$d does not exist. Cannot update field \"%2$s\""
+msgstr ""
+
+#. translators: %1$s: field name, %2$d: user ID
+#: includes/class-importer.php:392
+msgid "Field \"%1$s\" for user ID %2$d has the same value. Skipping update."
+msgstr ""
+
+#. translators: %1$s: field name, %2$d: user ID
+#: includes/class-importer.php:403
+msgid "Failed to update field \"%1$s\" for user ID %2$d."
+msgstr ""
+
+#. translators: %1$s: field name, %2$d: user ID
+#: includes/class-importer.php:424
+msgid "Successfully updated field \"%1$s\" for user ID %2$d."
 msgstr ""
 
 #. translators: %s: option name

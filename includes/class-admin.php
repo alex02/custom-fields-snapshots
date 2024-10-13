@@ -138,7 +138,14 @@ class Admin {
 	 */
 	public function render_network_settings_page() {
 		if ( ! current_user_can( 'manage_network_options' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'custom-fields-snapshots' ) );
+			wp_die(
+				esc_html__( 'You do not have sufficient permissions to access this page.', 'custom-fields-snapshots' ),
+				esc_html__( 'Permission Error', 'custom-fields-snapshots' ),
+				array(
+					'response'  => 403,
+					'back_link' => true,
+				)
+			);
 		}
 		?>
 		<div class="wrap">
@@ -179,7 +186,14 @@ class Admin {
 		check_admin_referer( 'custom_fields_snapshots_network_settings-options' );
 
 		if ( ! current_user_can( 'manage_network_options' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'custom-fields-snapshots' ) );
+			wp_die(
+				esc_html__( 'You do not have sufficient permissions to access this page.', 'custom-fields-snapshots' ),
+				esc_html__( 'Permission Error', 'custom-fields-snapshots' ),
+				array(
+					'response'  => 403,
+					'back_link' => true,
+				)
+			);
 		}
 
 		$options = array(
@@ -252,9 +266,23 @@ class Admin {
 	 */
 	public function render_settings_page() {
 		if ( $this->is_multisite && ! current_user_can( 'manage_network_options' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'custom-fields-snapshots' ) );
+			wp_die(
+				esc_html__( 'You do not have sufficient permissions to access this page.', 'custom-fields-snapshots' ),
+				esc_html__( 'Permission Error', 'custom-fields-snapshots' ),
+				array(
+					'response'  => 403,
+					'back_link' => true,
+				)
+			);
 		} elseif ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'custom-fields-snapshots' ) );
+			wp_die(
+				esc_html__( 'You do not have sufficient permissions to access this page.', 'custom-fields-snapshots' ),
+				esc_html__( 'Permission Error', 'custom-fields-snapshots' ),
+				array(
+					'response'  => 403,
+					'back_link' => true,
+				)
+			);
 		}
 
 		$is_network_admin = $this->is_multisite && is_network_admin();
@@ -362,7 +390,7 @@ class Admin {
 		
 							<div class="upload-area">
 								<div class="upload-icon dashicons dashicons-upload"></div>
-								<p style="margin-top:2.5em"><?php esc_html_e( 'Drag & Drop your JSON file here or click to select', 'custom-fields-snapshots' ); ?></p>
+								<p style="margin-top:2.5em"><?php esc_html_e( 'Drag & drop your JSON file here or click to select', 'custom-fields-snapshots' ); ?></p>
 								<input type="file" name="import_file" class="import-file" accept=".json" style="display:none">
 							</div>
 							
@@ -518,8 +546,8 @@ class Admin {
 									<?php $this->render_post_types_selection( 'private' ); ?>
 								</div>
 							</div>
-							<div class="side-wide-section">
-								<h4><?php esc_html_e( 'Side-wide Data', 'custom-fields-snapshots' ); ?></h4>
+							<div class="site-wide-section">
+								<h4><?php esc_html_e( 'Site-wide Data', 'custom-fields-snapshots' ); ?></h4>
 
 								<div class="scrollable-content">
 									<div class="select-all-site-wide-data-container post-type-selection">
@@ -527,7 +555,7 @@ class Admin {
 											<input type="checkbox" class="select-all-site-wide-data">
 											<?php
 											/* translators: %s: Post type label (e.g., "Public" or "Private") */
-											esc_html_e( 'All Side-wide Data', 'custom-fields-snapshots' );
+											esc_html_e( 'All Site-wide Data', 'custom-fields-snapshots' );
 											?>
 										</label>
 									</div>
@@ -541,10 +569,15 @@ class Admin {
 												value="1" 
 												class="post-type-checkbox options-checkbox"
 												<?php echo ! $is_acf_pro_active ? 'disabled' : ''; ?>>
-											<?php esc_html_e( 'Options', 'custom-fields-snapshots' ); ?>
-											<?php if ( ! $is_acf_pro_active ) : ?>
-												<span class="acf-pro-required"><?php esc_html_e( '(ACF Pro required)', 'custom-fields-snapshots' ); ?></span>
-											<?php endif; ?>
+											<span class="custom-fields-snapshot-post-item">
+												<span><?php esc_html_e( 'Options', 'custom-fields-snapshots' ); ?></span>
+												<?php if ( ! $is_acf_pro_active ) : ?>
+													<span class="tooltip">
+														<span class="dashicons dashicons-info"></span>
+														<span class="tooltiptext"><?php esc_html_e( 'ACF Pro required', 'custom-fields-snapshots' ); ?></span>
+													</span>
+												<?php endif; ?>
+											</span>
 										</label>
 									</div>
 
@@ -636,10 +669,18 @@ class Admin {
 		<?php
 
 		foreach ( $field_groups as $field_group ) :
+			/* translators: %s: Field group key */
+			$key_text = sprintf( esc_html__( 'Key: %s', 'custom-fields-snapshots' ), esc_html( $field_group['key'] ) );
 			?>
 			<label>
 				<input class="field-group-checkbox" type="checkbox" name="field_groups[]" value="<?php echo esc_attr( $field_group['key'] ); ?>">
-				<?php echo esc_html( $field_group['title'] ); ?>
+				<span class="custom-fields-snapshot-post-item">
+					<span><?php echo esc_html( $field_group['title'] ); ?></span>
+					<span class="tooltip">
+						<span class="dashicons dashicons-info"></span>
+						<span class="tooltiptext"><?php echo esc_html( $key_text ); ?></span>
+					</span>
+				</span>
 			</label>
 			<?php
 		endforeach;
@@ -737,77 +778,96 @@ class Admin {
 		</div>
 		<?php
 		foreach ( $post_types as $post_type ) :
+			// Use custom sorting for revisions for better visibility.
+			$orderby = 'revision' === $post_type->name
+				? array(
+					'post_title' => 'ASC',
+					'post_date'  => 'DESC',
+				)
+				: array(
+					'post_date' => 'DESC',
+				);
+
+			// Get all posts for the current post type.
+			$posts = get_posts(
+				array(
+					'post_type'      => $post_type->name,
+					'posts_per_page' => -1,
+					'post_status'    => 'any',
+					'orderby'        => $orderby,
+				)
+			);
+
+			$has_posts = ! empty( $posts );
+
+			$slug_text = sprintf(
+				/* translators: %s: Slug (could be Post Type or User Role) */
+				esc_html__( 'Slug: %s', 'custom-fields-snapshots' ),
+				esc_html( $post_type->name )
+			);
+
+			$tooltip_content = $has_posts ? $slug_text : esc_html__( 'No posts found', 'custom-fields-snapshots' ) . "\n" . $slug_text;
+
 			?>
 			<div class="post-type-selection">
-				<label>
-					<input type="checkbox" name="post_types[]" value="<?php echo esc_attr( $post_type->name ); ?>" class="post-type-checkbox <?php echo esc_attr( $type ); ?>-post-type-checkbox">
-					<?php echo esc_html( $post_type->label ); ?>
+				<label <?php echo ! $has_posts ? 'class="disabled"' : ''; ?>>
+					<input
+						type="checkbox"
+						name="post_types[]"
+						value="<?php echo esc_attr( $post_type->name ); ?>"
+						class="post-type-checkbox <?php echo esc_attr( $type ); ?>-post-type-checkbox"
+						<?php disabled( ! $has_posts ); ?>>
+					<span class="custom-fields-snapshot-post-type-item">
+						<span><?php echo esc_html( $post_type->label ); ?></span>
+						<span class="tooltip">
+							<span class="dashicons dashicons-info"></span>
+							<span class="tooltiptext"><?php echo esc_html( $tooltip_content ); ?></span>
+						</span>
+					</span>
 				</label>
+				<?php if ( $has_posts ) : ?>
 				<div class="post-ids-selection" style="margin-left:20px;display:none">
 					<label style="font-weight:bold">
 						<input type="checkbox" class="select-all-posts" data-post-type="<?php echo esc_attr( $post_type->name ); ?>">
 						<?php esc_html_e( 'All', 'custom-fields-snapshots' ); ?>
 					</label>
-					
-					<?php
-					// Use custom sorting for revisions for better visibility.
-					$orderby = 'revision' === $post_type->name
-						? array(
-							'post_title' => 'ASC',
-							'post_date'  => 'DESC',
-						)
-						: array(
-							'post_date' => 'DESC',
-						);
+					<?php foreach ( $posts as $post ) : ?>
+					<label>
+						<input type="checkbox" name="post_ids[<?php echo esc_attr( $post_type->name ); ?>][]" value="<?php echo esc_attr( $post->ID ); ?>" class="post-id-checkbox">
+						<?php
+						$post_title = get_the_title( $post );
+						$post_id    = absint( $post->ID );
 
-					// Get all posts for the current post type.
-					$posts = get_posts(
-						array(
-							'post_type'      => $post_type->name,
-							'posts_per_page' => -1,
-							'post_status'    => 'any',
-							'orderby'        => $orderby,
-						)
-					);
+						/* translators: %d: Item ID (could be Post ID or User ID) */
+						$id_string = sprintf( __( 'ID: %d', 'custom-fields-snapshots' ), $post_id );
 
-					foreach ( $posts as $post ) :
-						?>
-						<label>
-							<input type="checkbox" name="post_ids[<?php echo esc_attr( $post_type->name ); ?>][]" value="<?php echo esc_attr( $post->ID ); ?>" class="post-id-checkbox">
-							<?php
-							$post_title = get_the_title( $post );
-							$post_id    = absint( $post->ID );
+						$date_string = '';
+						if ( 'revision' === $post_type->name ) {
+							$date_format    = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+							$formatted_date = get_the_date( $date_format, $post );
 
-							/* translators: %d: Item ID (could be Post ID or User ID) */
-							$id_string = sprintf( __( 'ID: %d', 'custom-fields-snapshots' ), $post_id );
-
-							$date_string = '';
-							if ( 'revision' === $post_type->name ) {
-								$date_format    = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
-								$formatted_date = get_the_date( $date_format, $post );
-
-								/* translators: %s: Formatted date and time */
-								$date_string = sprintf(
-									'<span class="published-label">%1$s</span> %2$s',
-									esc_html__( 'Published:', 'custom-fields-snapshots' ),
-									esc_html( $formatted_date )
-								);
-							}
-
-							$tooltip_content = $date_string ? $id_string . "\n" . $date_string : $id_string;
-
-							/* translators: 1: Post title, 2: Tooltip content with post information */
-							$output = sprintf(
-								'<div class="custom-fields-snapshot-post-item">
-									<span class="post-title">%1$s</span>
-									<span class="tooltip">
-										<span class="dashicons dashicons-info"></span>
-										<span class="tooltiptext">%2$s</span>
-									</span>
-								</div>',
-								esc_html( $post_title ),
-								$tooltip_content
+							/* translators: %s: Formatted date and time */
+							$date_string = sprintf(
+								'<span class="published-label">%1$s</span> %2$s',
+								esc_html__( 'Published:', 'custom-fields-snapshots' ),
+								esc_html( $formatted_date )
 							);
+						}
+
+						$tooltip_content = $date_string ? $id_string . "\n" . $date_string : $id_string;
+
+						/* translators: 1: Post title, 2: Tooltip content with post information */
+						$output = sprintf(
+							'<span class="custom-fields-snapshot-post-item">
+								<span class="post-title">%1$s</span>
+								<span class="tooltip">
+									<span class="dashicons dashicons-info"></span>
+									<span class="tooltiptext">%2$s</span>
+								</span>
+							</span>',
+							esc_html( $post_title ),
+							$tooltip_content
+						);
 
 							echo wp_kses(
 								$output,
@@ -818,55 +878,14 @@ class Admin {
 									),
 								)
 							);
-							?>
-						</label>
+						?>
+					</label>
 					<?php endforeach; ?>
 				</div>
+				<?php endif; ?>
 			</div>
 			<?php
 		endforeach;
-	}
-
-	/**
-	 * Render the selection of user roles for export.
-	 *
-	 * @since 1.1.0
-	 */
-	private function render_user_roles_selection() {
-		/**
-		 * Filters the user roles to be exported.
-		 *
-		 * @since 1.1.0
-		 *
-		 * @param array $roles The user roles to be exported.
-		 */
-		$roles = apply_filters( 'custom_fields_snapshots_export_user_roles', wp_roles()->get_names() );
-
-		if ( empty( $roles ) ) {
-			esc_html_e( 'No user roles found.', 'custom-fields-snapshots' );
-			return;
-		}
-
-		?>
-		<div class="user-selection">
-			<label>
-				<input type="checkbox" class="post-type-checkbox user-roles-checkbox" data-type="user-roles">
-				<?php esc_html_e( 'User Roles', 'custom-fields-snapshots' ); ?>
-			</label>
-			<div class="user-roles-selection" style="margin-left: 20px; display: none;">
-				<label style="font-weight: bold;">
-					<input type="checkbox" class="select-all-users" data-type="roles">
-					<?php esc_html_e( 'All', 'custom-fields-snapshots' ); ?>
-				</label>
-				<?php foreach ( $roles as $role_value => $role_name ) : ?>
-					<label>
-						<input type="checkbox" name="user_roles[]" value="<?php echo esc_attr( $role_value ); ?>" class="post-id-checkbox">
-						<?php echo esc_html( translate_user_role( $role_name ) ); ?>
-					</label>
-				<?php endforeach; ?>
-			</div>
-		</div>
-		<?php
 	}
 
 	/**
@@ -884,17 +903,19 @@ class Admin {
 		 */
 		$users = apply_filters( 'custom_fields_snapshots_export_users', get_users( array( 'fields' => array( 'ID', 'user_login', 'display_name' ) ) ) );
 
-		if ( empty( $users ) ) {
-			esc_html_e( 'No users found.', 'custom-fields-snapshots' );
-			return;
-		}
+		$has_users = ! empty( $users );
 
 		?>
 		<div class="user-selection">
-			<label>
-				<input type="checkbox" class="post-type-checkbox users-checkbox" data-type="users">
+			<label <?php echo ! $has_users ? 'class="disabled"' : ''; ?>>
+				<input
+					type="checkbox"
+					class="post-type-checkbox users-checkbox"
+					data-type="users"
+					<?php disabled( ! $has_users ); ?>>
 				<?php esc_html_e( 'Users', 'custom-fields-snapshots' ); ?>
 			</label>
+			<?php if ( $has_users ) : ?>
 			<div class="user-ids-selection" style="margin-left: 20px; display: none;">
 				<label style="font-weight: bold;">
 					<input type="checkbox" class="select-all-users" data-type="users">
@@ -915,13 +936,13 @@ class Admin {
 
 						/* translators: 1: User display name, 2: Tooltip content with user information */
 						$output = sprintf(
-							'<div class="custom-fields-snapshot-post-item">
+							'<span class="custom-fields-snapshot-post-item">
 								<span class="post-title">%1$s</span>
 								<span class="tooltip">
 									<span class="dashicons dashicons-info"></span>
 									<span class="tooltiptext">%2$s</span>
 								</span>
-							</div>',
+							</span>',
 							esc_html( $post_title ),
 							esc_html( $id_string . "\n" . $tooltip_content )
 						);
@@ -937,6 +958,62 @@ class Admin {
 					</label>
 				<?php endforeach; ?>
 			</div>
+			<?php endif; ?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render the selection of user roles for export.
+	 *
+	 * @since 1.1.0
+	 */
+	private function render_user_roles_selection() {
+		/**
+		 * Filters the user roles to be exported.
+		 *
+		 * @since 1.1.0
+		 *
+		 * @param array $roles The user roles to be exported.
+		 */
+		$roles = apply_filters( 'custom_fields_snapshots_export_user_roles', wp_roles()->get_names() );
+
+		$has_roles = ! empty( $roles );
+
+		?>
+		<div class="user-selection">
+			<label <?php echo ! $has_roles ? 'class="disabled"' : ''; ?>>
+				<input
+					type="checkbox"
+					class="post-type-checkbox user-roles-checkbox"
+					data-type="user-roles"
+					<?php disabled( ! $has_roles ); ?>>
+				<?php esc_html_e( 'User Roles', 'custom-fields-snapshots' ); ?>
+			</label>
+			<?php if ( $has_roles ) : ?>
+			<div class="user-roles-selection" style="margin-left: 20px; display: none;">
+				<label style="font-weight: bold;">
+					<input type="checkbox" class="select-all-users" data-type="roles">
+					<?php esc_html_e( 'All', 'custom-fields-snapshots' ); ?>
+				</label>
+				<?php
+				foreach ( $roles as $role_value => $role_name ) :
+					/* translators: %s: Slug (could be Post Type or User Role) */
+					$slug_text = sprintf( esc_html__( 'Slug: %s', 'custom-fields-snapshots' ), esc_html( $role_value ) );
+					?>
+					<label>
+						<input type="checkbox" name="user_roles[]" value="<?php echo esc_attr( $role_value ); ?>" class="post-id-checkbox">
+						<span class="custom-fields-snapshot-post-type-item">
+							<span><?php echo esc_html( translate_user_role( $role_name ) ); ?></span>
+							<span class="tooltip">
+								<span class="dashicons dashicons-info"></span>
+								<span class="tooltiptext"><?php echo esc_html( $slug_text ); ?></span>
+							</span>
+						</span>
+					</label>
+				<?php endforeach; ?>
+			</div>
+			<?php endif; ?>
 		</div>
 		<?php
 	}
@@ -1274,11 +1351,25 @@ class Admin {
 		$nonce = isset( $_POST['custom-fields-snapshots-export-nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['custom-fields-snapshots-export-nonce'] ) ) : '';
 
 		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'custom-fields-snapshots-export' ) ) {
-			wp_die( esc_html__( 'Invalid nonce', 'custom-fields-snapshots' ) );
+			wp_die(
+				esc_html__( 'Invalid nonce', 'custom-fields-snapshots' ),
+				esc_html__( 'Security Error', 'custom-fields-snapshots' ),
+				array(
+					'response'  => 403,
+					'back_link' => true,
+				)
+			);
 		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Insufficient permissions', 'custom-fields-snapshots' ) );
+			wp_die(
+				esc_html__( 'You do not have sufficient permissions to access this page.', 'custom-fields-snapshots' ),
+				esc_html__( 'Permission Error', 'custom-fields-snapshots' ),
+				array(
+					'response'  => 403,
+					'back_link' => true,
+				)
+			);
 		}
 
 		$exports = array(
@@ -1335,7 +1426,14 @@ class Admin {
 
 		if ( ! empty( $errors ) ) {
 			$error_message = implode( '<br>', $errors );
-			wp_die( esc_html( $error_message ), esc_html( __( 'Export Validation Error', 'custom-fields-snapshots' ) ), array( 'back_link' => true ) );
+			wp_die(
+				esc_html( $error_message ),
+				esc_html( __( 'Export Validation Error', 'custom-fields-snapshots' ) ),
+				array(
+					'response'  => 400,
+					'back_link' => true,
+				)
+			);
 		}
 
 		/**
@@ -1356,7 +1454,14 @@ class Admin {
 
 		// Check if there's any data to export.
 		if ( ! $this->exporter->has_data( $export_data ) ) {
-			wp_die( esc_html( __( 'No data to export for the selected field groups and post types, users, or options.', 'custom-fields-snapshots' ) ), esc_html( __( 'Export Error', 'custom-fields-snapshots' ) ), array( 'back_link' => true ) );
+			wp_die(
+				esc_html( __( 'No data to export for the selected field groups and post types, users, or options.', 'custom-fields-snapshots' ) ),
+				esc_html( __( 'Export Error', 'custom-fields-snapshots' ) ),
+				array(
+					'response'  => 400,
+					'back_link' => true,
+				)
+			);
 		}
 
 		/**
@@ -1559,7 +1664,6 @@ class Admin {
 		return $sanitized_value;
 	}
 
-
 	/**
 	 * Render the enable logging field.
 	 *
@@ -1588,7 +1692,6 @@ class Admin {
 		$delete_data = $this->is_multisite
 			? get_site_option( 'custom_fields_snapshots_delete_plugin_data', false )
 			: get_option( 'custom_fields_snapshots_delete_plugin_data', false );
-
 		?>
 		<label>
 			<input type="checkbox" name="custom_fields_snapshots_delete_plugin_data" value="1" <?php checked( $delete_data, true ); ?>>

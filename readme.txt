@@ -3,7 +3,7 @@ Contributors: alexgeorgiev
 Tags: acf, custom fields, export, import, snapshot
 Requires at least: 6.0
 Tested up to: 6.6
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -14,7 +14,7 @@ Create backups of your Advanced Custom Fields data for easy migration, version c
 
 Custom Fields Snapshots allow you to easily create backups of your Advanced Custom Fields (ACF) data by exporting selected field groups, post types, users, and options. These snapshots enable version control, make it easier to share setups with team members, assist with migrations between WordPress environments, and enable quick restoration of previous configurations.
 
-**Important: This plugin requires Advanced Custom Fields (ACF) or ACF Pro to be installed and activated.**
+**This plugin requires Advanced Custom Fields (ACF) or ACF Pro to be installed and activated.**
 
 = Features =
 * Export ACF field data for specific field groups, post types, users, and options
@@ -38,16 +38,20 @@ Custom Fields Snapshots simplifies ACF data management, offering a reliable solu
 
 == How to Use ==
 
-1. Go to the 'Field Snapshots' menu in your WordPress admin panel
-2. Select the field groups, post types, options, and specific posts you want to export
-3. Click 'Export Snapshot' to download a JSON file of your data
-4. To import, upload the JSON file and click 'Import Snapshot'
+1. Navigate to the 'Field Snapshots' menu in your WordPress admin panel.
+2. Select the field groups, post types, options, specific posts, users, or user roles you want to export.
+3. Click 'Export Snapshot' to download a JSON file of your data.
+4. To import, upload the JSON file and click 'Import Snapshot'.
 
 == Frequently Asked Questions ==
 
-= Does this plugin work with the free version of ACF? =
+= Which ACF versions are compatible with the plugin? =
 
-Yes, Custom Fields Snapshots works with both the free version of Advanced Custom Fields and ACF Pro.
+Custom Fields Snapshots is compatible with both ACF Free and ACF Pro. While the plugin should work with versions prior to 5.0, as it relies on core ACF functions, it's recommended to use the latest version of ACF for optimal performance, security, and compatibility.
+
+The plugin is regularly tested with the latest ACF versions to ensure continued compatibility. If you're using an older ACF version (prior to 5.0), the plugin should still function correctly with your setup.
+
+If you encounter any compatibility issues, please don't hesitate to reach out for support.
 
 = Can I export data from one site and import it to another? =
 
@@ -56,17 +60,6 @@ Absolutely! This is one of the main features of the plugin. Just make sure both 
 = What kind of fields and data can I export? =
 
 You can export any field types supported by ACF or ACF Pro, including repeater fields, galleries, and flexible content, from post types, users and options.
-
-= Which ACF versions are compatible with the plugin? =
-
-Custom Fields Snapshots is designed to work with both ACF Free and ACF Pro. While it should be compatible with versions prior to 5.0 due to its use of core ACF functions, I officially maintain and test compatibility with:
-
-* The latest version of ACF (free and pro)
-* One version prior to the latest
-
-For optimal performance and compatibility, I recommend using the most recent version of ACF. However, if you're using an older version, the plugin may still function correctly with your setup.
-
-If you encounter any compatibility issues, please don't hesitate to reach out for support.
 
 = How does the rollback feature work? =
 
@@ -88,6 +81,10 @@ Yes, the plugin supports WordPress Multisite installations, allowing you to mana
 
 == Changelog ==
 
+= 1.1.1 =
+* Added tooltips with additional information for fields groups, post types, and user roles on the Export tab
+* Prevent selection of disabled items when selecting all items
+
 = 1.1.0 =
 * Added support for exporting user field data.
 * Restructured import/export processes to avoid naming conflicts.
@@ -98,6 +95,10 @@ Yes, the plugin supports WordPress Multisite installations, allowing you to mana
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.1.1 =
+* Added tooltips with additional information for fields groups, post types, and user roles on the Export tab
+* Prevent selection of disabled items when selecting all items
 
 = 1.1.0 =
 **This version introduces a new export/import structure that prevents naming conflicts. Export files from earlier versions are not compatible. Please re-export your data after updating.**

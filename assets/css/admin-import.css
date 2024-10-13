@@ -48,7 +48,7 @@
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    max-width: 50%;
+    max-width: 100%;
 }
 
 .custom-fields-snapshots .upload-area:hover {
