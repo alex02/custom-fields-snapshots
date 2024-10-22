@@ -69,7 +69,7 @@ class Field_Processor {
 			}
 			return false;
 		}
-		return ! empty( $value ) || 0 === $value || '0' === $value;
+		return ! empty( $value ) || '' === $value || 0 === $value || '0' === $value;
 	}
 
 	/**

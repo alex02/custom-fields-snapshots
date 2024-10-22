@@ -60,9 +60,9 @@
     padding-left: 0.5em;
 }
 
-.custom-fields-snapshots label.disabled {
-    color: #999;
-    cursor: not-allowed;
+.custom-fields-snapshots .export-tab .export-step label.disabled {
+	color: #999;
+	cursor: not-allowed;
 }
 
 .custom-fields-snapshots label.disabled input {
@@ -93,7 +93,10 @@
 }
 
 .custom-fields-snapshots .export-field-groups input[type="checkbox"] {
+    align-self: center;
     margin-right: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .custom-fields-snapshots .select-all-field-groups-container {
@@ -127,12 +130,16 @@
 }
 
 .custom-fields-snapshots .post-type-selection,
-.custom-fields-snapshots .user-selection {
+.custom-fields-snapshots .user-selection,
+.custom-fields-snapshots .user-role-selection,
+.custom-fields-snapshots .taxonomy-selection {
     margin-bottom: 5px;
 }
 
 .custom-fields-snapshots .post-type-selection label,
-.custom-fields-snapshots .user-selection label {
+.custom-fields-snapshots .user-selection label,
+.custom-fields-snapshots .user-role-selection label,
+.custom-fields-snapshots .taxonomy-selection label {
     align-items: center;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -143,25 +150,33 @@
 }
 
 .custom-fields-snapshots .post-type-selection label:hover,
-.custom-fields-snapshots .user-selection label:hover {
+.custom-fields-snapshots .user-selection label:hover,
+.custom-fields-snapshots .user-role-selection label:hover,
+.custom-fields-snapshots .term-ids-selection label:hover {
     background-color: #f0f0f0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .custom-fields-snapshots .post-type-selection input[type="checkbox"],
-.custom-fields-snapshots .user-selection input[type="checkbox"] {
+.custom-fields-snapshots .user-selection input[type="checkbox"],
+.custom-fields-snapshots .user-role-selection input[type="checkbox"],
+.custom-fields-snapshots .taxonomy-selection input[type="checkbox"] {
     margin-right: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .custom-fields-snapshots .post-ids-selection,
 .custom-fields-snapshots .user-ids-selection,
-.custom-fields-snapshots .user-roles-selection {
+.custom-fields-snapshots .user-roles-selection,
+.custom-fields-snapshots .term-ids-selection {
     margin: 5px 0;
 }
 
 .custom-fields-snapshots .post-ids-selection label,
 .custom-fields-snapshots .user-ids-selection label,
-.custom-fields-snapshots .user-roles-selection label {
+.custom-fields-snapshots .user-roles-selection label,
+.custom-fields-snapshots .taxonomy-selection label {
     margin-bottom: 0.5em;
 }
 
@@ -171,6 +186,7 @@
 }
 
 .custom-fields-snapshots .select-all-post-types-container label,
+.custom-fields-snapshots .select-all-taxonomies-container label,
 .custom-fields-snapshots .select-all-site-wide-data-container label {
     align-items: center;
     background-color: #f0f0f0;
@@ -186,12 +202,16 @@
 
 .custom-fields-snapshots .post-ids-selection .post-info,
 .custom-fields-snapshots .user-ids-selection .post-info,
-.custom-fields-snapshots .user-roles-selection .post-info {
+.custom-fields-snapshots .user-roles-selection .post-info,
+.custom-fields-snapshots .taxonomy-selection .post-info {
     color: #afafaf;
 }
 
 .custom-fields-snapshots .custom-fields-snapshot-post-item,
-.custom-fields-snapshots .custom-fields-snapshot-post-type-item {
+.custom-fields-snapshots .custom-fields-snapshot-post-type-item,
+.custom-fields-snapshots .custom-fields-snapshot-user-item,
+.custom-fields-snapshots .custom-fields-snapshot-taxonomy-item,
+.custom-fields-snapshots .custom-fields-snapshot-term-item {
     align-items: center;
     display: flex;
     justify-content: space-between;
@@ -245,8 +265,13 @@
         grid-template-columns: 1fr;
     }
 
+    .custom-fields-snapshots .export-step h4 {
+        padding-top: 1em;
+    }
+
     .custom-fields-snapshots .post-types-container {
         grid-template-columns: 1fr;
+        gap: 0;
     }
 
     .custom-fields-snapshots .export-form input {
@@ -254,7 +279,7 @@
     }
 
     .custom-fields-snapshots .post-type-section,
-    .custom-fields-shapshots .site-wide-section {
+    .custom-fields-snapshots .site-wide-section {
         flex-basis: 100%;
         padding-top: 0;
     }
@@ -267,9 +292,24 @@
     .custom-fields-snapshots .export-field-groups label {
         padding: 5px 10px;
     }
+
+    .custom-fields-snapshots .post-type-selection input[type="checkbox"],
+    .custom-fields-snapshots .user-selection input[type="checkbox"],
+    .custom-fields-snapshots .user-role-selection input[type="checkbox"],
+    .custom-fields-snapshots .taxonomy-selection input[type="checkbox"] {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+
+    .custom-fields-snapshots .export-field-groups input[type="checkbox"] {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
     
     .custom-fields-snapshots .post-type-selection label,
-    .custom-fields-snapshots .user-selection label {
+    .custom-fields-snapshots .user-selection label,
+    .custom-fields-snapshots .user-role-selection label,
+    .custom-fields-snapshots .taxonomy-selection label {
         padding: 5px 10px;
     }
 

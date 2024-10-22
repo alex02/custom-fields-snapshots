@@ -17,7 +17,15 @@
     overflow-y: auto;
 }
 
-.custom-fields-snapshots .event-log h4 {
+.custom-fields-snapshots .event-log .header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.custom-fields-snapshots .event-log .header h4 {
+    font-size: 0.9rem;
     margin: 0;
 }
 
@@ -123,6 +131,18 @@
     font-size: 16px;
 }
 
+.custom-fields-snapshots .event-log .log-info {
+    color: #0066cc;
+}
+
+.custom-fields-snapshots .event-log .log-error {
+    color: #cc0000;
+}
+
+.custom-fields-snapshots .event-log .log-success {
+    color: #006600;
+}
+
 @media (max-width: 768px) {
     .custom-fields-snapshots .import-tab {
         grid-template-columns: 1fr;
@@ -141,6 +161,10 @@
     .custom-fields-snapshots .event-log {
         max-width: 100%;
         overflow-x: auto;
+    }
+
+    .custom-fields-snapshots .event-log .header h4 {
+        font-size: 1rem;
     }
 
     .custom-fields-snapshots .event-log pre {

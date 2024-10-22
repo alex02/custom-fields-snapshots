@@ -42,7 +42,7 @@ class Logger {
 		$this->log[] = array(
 			'type'    => sanitize_key( $type ),
 			'message' => wp_kses_post( $message ),
-			'time'    => current_time( 'mysql' ),
+			'time'    => current_time( 'c' ),
 		);
 	}
 
@@ -62,10 +62,24 @@ class Logger {
 
 		return array_map(
 			function ( $entry ) use ( $log_types ) {
+				$type      = isset( $log_types[ $entry['type'] ] ) ? $log_types[ $entry['type'] ] : $entry['type'];
+				$type_span = wp_kses(
+					sprintf(
+						'<span class="log-%1$s">[%2$s]</span>',
+						esc_attr( strtolower( $type ) ),
+						esc_html( $type )
+					),
+					array(
+						'span' => array(
+							'class' => array(),
+						),
+					)
+				);
+
 				return sprintf(
-					// translators: 1: Log entry type, 2: Log entry time, 3: Log entry message.
-					esc_html__( '[%1$s] %2$s: %3$s', 'custom-fields-snapshots' ),
-					$log_types[ $entry['type'] ] ?? $entry['type'],
+					/* translators: %1$s: Log entry type (HTML), %2$s: Log entry time, %3$s: Log entry message */
+					__( '%1$s %2$s: %3$s', 'custom-fields-snapshots' ),
+					$type_span,
 					esc_html( $entry['time'] ),
 					esc_html( $entry['message'] )
 				);

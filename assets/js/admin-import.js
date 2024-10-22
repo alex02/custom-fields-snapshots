@@ -20,7 +20,7 @@ jQuery(function($) {
                 $uploadArea.hide();
                 $fileInput[0].files = files;
             } else {
-                alert(customFieldsSnapshots.L10n.invalidFileType);
+                alert(customFieldsSnapshots.l10n.invalidFileType);
             }
         }
     }
@@ -28,6 +28,55 @@ jQuery(function($) {
     function displayValidationErrors(errors) {
         var errorHtml = errors.length ? '<div class="notice notice-error"><p>' + errors.join('</p><p>') + '</p></div>' : '';
         $importValidationMessage.html(errorHtml).show();
+    }
+
+    function attachCopyLogHandler() {
+        $('.custom-fields-snapshots .copy-log').off('click').on('click', function(e) {
+            e.preventDefault();
+            var $button = $(this);
+            var $pre = $button.closest('.event-log').find('pre');
+            var logText = $pre.text();
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(logText).then(function() {
+                    updateButtonText($button);
+                }).catch(function(err) {
+                    console.error('Failed to copy text: ', err);
+                });
+            } else {
+                var $temp = $('<textarea>');
+                $('body').append($temp);
+                $temp.val(logText).select();
+        
+                try {
+                    var success = document.execCommand('copy');
+                    if (success) {
+                        updateButtonText($button);
+                    } else {
+                        console.error('execCommand returned false');
+                    }
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                } finally {
+                    $temp.remove();
+                }
+            }
+        });
+    
+        function updateButtonText($button) {
+            var originalText = $button.data('original-text') || $button.text();
+            $button.data('original-text', originalText);
+            
+            $button.text(customFieldsSnapshots.l10n.copiedText);
+            
+            clearTimeout($button.data('reset-timeout'));
+            
+            var resetTimeout = setTimeout(function() {
+                $button.text(originalText);
+            }, 2000);
+            
+            $button.data('reset-timeout', resetTimeout);
+        }
     }
 
     $uploadArea.on({
@@ -75,7 +124,7 @@ jQuery(function($) {
     $importForm.on('submit', function(e) {
         e.preventDefault();
 
-        if (!$('.custom-fields-snapshots #rollback-changes-input').is(':checked') && !confirm(customFieldsSnapshots.L10n.rollbackDisabledConfirmation)) {
+        if (!$('.custom-fields-snapshots #rollback-changes-input').is(':checked') && !confirm(customFieldsSnapshots.l10n.rollbackDisabledConfirmation)) {
             return false;
         }
 
@@ -84,9 +133,9 @@ jQuery(function($) {
         var errors = [];
 
         if (!file) {
-            errors.push(customFieldsSnapshots.L10n.noFileSelected);
+            errors.push(customFieldsSnapshots.l10n.noFileSelected);
         } else if (file.type !== 'application/json') {
-            errors.push(customFieldsSnapshots.L10n.invalidFileType);
+            errors.push(customFieldsSnapshots.l10n.invalidFileType);
         }
 
         if (errors.length) {
@@ -96,7 +145,7 @@ jQuery(function($) {
         }
 
         var $submitButton = $(this).find('input[type="submit"]');
-        $submitButton.prop('disabled', true).val(customFieldsSnapshots.L10n.importingText);
+        $submitButton.prop('disabled', true).val(customFieldsSnapshots.l10n.importingText);
 
         formData.append('action', 'custom_fields_snapshots_import');
         formData.append('nonce', customFieldsSnapshots.nonce);
@@ -119,18 +168,26 @@ jQuery(function($) {
                 }
                 
                 if (response.data.log) {
-                    $eventLog.html('<h4>' + customFieldsSnapshots.L10n.eventLogText + '</h4><pre>' + response.data.log + '</pre>').show();
+                    $eventLog.html(
+                        '<div class="header">' +
+                            '<h4>' + customFieldsSnapshots.l10n.eventLogText + '</h4>' +
+                            '<a class="button button-secondary copy-log">' + customFieldsSnapshots.l10n.copyText + '</a>' +
+                        '</div>' +
+                        '<pre>' + response.data.log + '</pre>'
+                    ).show();
+                    
+                    attachCopyLogHandler();
                 } else {
                     $eventLog.hide();
                 }
             },
             error: function() {
                 $importValidationMessage.html('');
-                $importResult.html('<div class="notice notice-error"><p>' + customFieldsSnapshots.L10n.ajaxError + '</p></div>').show();
+                $importResult.html('<div class="notice notice-error"><p>' + customFieldsSnapshots.l10n.ajaxError + '</p></div>').show();
                 $eventLog.hide();
             },
             complete: function() {
-                $submitButton.prop('disabled', false).val(customFieldsSnapshots.L10n.importText);
+                $submitButton.prop('disabled', false).val(customFieldsSnapshots.l10n.importText);
             }
         });
     });

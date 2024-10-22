@@ -63,7 +63,7 @@ class Exporter {
 	 * Exports data for a single field group.
 	 *
 	 * This function processes and exports data for a specific field group,
-	 * including post types, specific posts, options, and user data if specified.
+	 * by post types, taxonomies, options, users, and comments.
 	 *
 	 * @since 1.0.0
 	 *
@@ -72,7 +72,10 @@ class Exporter {
 	 *                          'post_types'  => Array of post types to export,
 	 *                          'post_ids'    => Array of post IDs to export, keyed by post type,
 	 *                          'options'     => Whether to export options pages (boolean),
-	 *                          'users'       => Array with 'roles' and 'ids' for user data export.
+	 *                          'users'       => Array with 'roles' and 'ids' for user data export,
+	 *                          'taxonomies'  => Array of taxonomies to export,
+	 *                          'term_ids'    => Array of term IDs to export, keyed by taxonomy,
+	 *                          'comments'    => Array with comment export configuration.
 	 * @return array The exported field group data.
 	 */
 	private function export_field_group_data( $group_key, $exports ) {
@@ -121,28 +124,29 @@ class Exporter {
 	/**
 	 * Retrieves data for a single field across various contexts.
 	 *
-	 * This function collects field data from options, users, and specified post types.
-	 * It processes the data through filters and ensures only non-empty values are included.
-	 *
 	 * @since 1.0.0
 	 *
 	 * @param array $field   The field configuration array.
-	 * @param array $exports Export configuration array containing:
-	 *                       'options'    => (bool) Whether to export options,
-	 *                       'users'      => array(
-	 *                           'roles' => (array) User roles to export,
-	 *                           'ids'   => (array) User IDs to export
-	 *                       ),
-	 *                       'post_types' => (array) Post types to export,
-	 *                       'post_ids'   => (array) Post IDs to export, keyed by post type.
-	 * @return array The collected field data, organized by context (options, users, post types).
+	 * @param array $exports Export configuration array.
+	 * @return array The collected field data, organized by context.
 	 */
 	private function get_field_data( $field, $exports ) {
 		$field_data = array(
+			'post_types' => array(),
+			'taxonomies' => array(),
 			'options'    => array(),
 			'users'      => array(),
-			'post_types' => array(),
+			'comments'   => array(),
 		);
+
+		// Handle post types.
+		if ( ! empty( $exports['post_types'] ) ) {
+			$post_type_data = $this->get_post_type_field_data( $field, $exports['post_types'], $exports['post_ids'] );
+
+			if ( ! empty( $post_type_data ) ) {
+				$field_data['post_types'] = $post_type_data;
+			}
+		}
 
 		// Handle options.
 		if ( $exports['options'] ) {
@@ -152,14 +156,20 @@ class Exporter {
 				/**
 				 * Filters the value of an option field before exporting.
 				 *
-				 * @since 1.0.0
+				 * @since 1.2.0
 				 *
-				 * @param mixed $value The option field value.
-				 * @return mixed The filtered option field value.
+				 * @param mixed  $value        The processed field value.
+				 * @param string $context      The context of the export. Possible values are 'post', 'taxonomy', 'option', 'user', or 'comment'.
+				 * @param array  $field        The field configuration array.
+				 * @param array  $context_data Additional context-specific data.
+				 * @return mixed The filtered field value to be exported.
 				 */
 				$field_data['options'] = apply_filters(
-					sprintf( 'custom_fields_snapshots_export_option_%s_value', sanitize_key( $field['name'] ) ),
-					$this->processor->process_field_value( $field, $value )
+					'custom_fields_snapshots_export_field_value',
+					$this->processor->process_field_value( $field, $value ),
+					'option',
+					$field,
+					array()
 				);
 
 				if ( ! $this->processor->has_nested_field_value( $field_data['options'] ) ) {
@@ -168,12 +178,21 @@ class Exporter {
 			}
 		}
 
-		// Handle post types.
-		if ( ! empty( $exports['post_types'] ) ) {
-			$post_type_data = $this->get_post_type_field_data( $field, $exports['post_types'], $exports['post_ids'] );
+		// Handle comments.
+		if ( $exports['comments'] ) {
+			$comment_data = $this->get_comment_field_data( $field, $exports['post_types'] );
 
-			if ( ! empty( $post_type_data ) ) {
-				$field_data['post_types'] = $post_type_data;
+			if ( ! empty( $comment_data ) ) {
+				$field_data['comments'] = $comment_data;
+			}
+		}
+
+		// Handle taxonomies.
+		if ( ! empty( $exports['taxonomies'] ) ) {
+			$taxonomy_data = $this->get_taxonomy_field_data( $field, $exports['term_ids'] );
+
+			if ( ! empty( $taxonomy_data ) ) {
+				$field_data['taxonomies'] = $taxonomy_data;
 			}
 		}
 
@@ -189,9 +208,7 @@ class Exporter {
 		// Remove any empty arrays.
 		$field_data = array_filter(
 			$field_data,
-			function ( $value ) {
-				return $this->processor->has_nested_field_value( $value );
-			}
+			array( $this->processor, 'has_nested_field_value' )
 		);
 
 		return $field_data;
@@ -215,14 +232,39 @@ class Exporter {
 
 		foreach ( $post_types as $post_type ) {
 			if ( ! empty( $post_ids[ $post_type ] ) ) {
-				$query_args = array(
+				$args = array(
 					'post_type'      => $post_type,
 					'posts_per_page' => -1,
 					'post_status'    => 'any',
 					'post__in'       => array_map( 'absint', $post_ids[ $post_type ] ),
 				);
 
-				$posts = get_posts( $query_args );
+				/**
+				 * Filters the query arguments for retrieving posts during the export process.
+				 *
+				 * This filter allows modification of the arguments passed to get_posts() when
+				 * exporting post data. It can be used to adjust which posts are included in the export.
+				 *
+				 * @since 1.2.0
+				 *
+				 * @param array  $args         The arguments for get_posts().
+				 * @param string $context      The context of the export. Possible values are 'post', 'taxonomy', 'option', 'user', or 'comment'.
+				 * @param array  $field        The field configuration array.
+				 * @param array  $context_data Additional context-specific data.
+				 * @return array The filtered arguments for get_posts().
+				 */
+				$args = apply_filters(
+					'custom_fields_snapshots_export_args',
+					$args,
+					'post',
+					$field,
+					array(
+						'post_type' => $post_type,
+						'post_ids'  => $post_ids[ $post_type ],
+					)
+				);
+
+				$posts = get_posts( $args );
 
 				foreach ( $posts as $post ) {
 					$value = get_field( $field['name'], $post->ID, $this->processor->maybe_format_value( $field ) );
@@ -234,18 +276,23 @@ class Exporter {
 						/**
 						 * Filters the value of a post field before exporting.
 						 *
-						 * @since 1.0.0
+						 * @since 1.2.0
 						 *
-						 * @param mixed  $value     The post field value.
-						 * @param string $post_type The post type.
-						 * @param int    $post_id   The post ID.
+						 * @param mixed  $value        The post field value.
+						 * @param string $context      The context of the export. Possible values are 'post', 'taxonomy', 'option', 'user', or 'comment'.
+						 * @param array  $field        The field configuration array.
+						 * @param array  $context_data Additional context-specific data.
 						 * @return mixed The filtered post field value.
 						 */
 						$post_type_data[ $post_type ][ $post->ID ] = apply_filters(
-							sprintf( 'custom_fields_snapshots_export_field_%s_value', sanitize_key( $field['name'] ) ),
+							'custom_fields_snapshots_export_field_value',
 							$this->processor->process_field_value( $field, $value ),
-							$post_type,
-							$post->ID
+							'post',
+							$field,
+							array(
+								'post_type' => $post_type,
+								'post_id'   => $post->ID,
+							)
 						);
 
 						if ( ! $this->processor->has_nested_field_value( $post_type_data[ $post_type ][ $post->ID ] ) ) {
@@ -281,20 +328,115 @@ class Exporter {
 
 		if ( ! empty( $user_exports['ids'] ) ) {
 			if ( isset( $user_query_args['role__in'] ) ) {
-				// Both roles and IDs are selected.
+				/**
+				 * Filters the arguments for retrieving users during the export process.
+				 *
+				 * This filter allows modification of the arguments passed to get_users() when
+				 * exporting user data. It can be used to adjust which users are included in the export.
+				 *
+				 * @since 1.2.0
+				 *
+				 * @param array  $args         The arguments for get_users().
+				 * @param string $context      The context of the export. Possible values are 'post', 'taxonomy', 'option', 'user', or 'comment'.
+				 * @param array  $field        The field configuration array.
+				 * @param array  $context_data Additional context-specific data.
+				 * @return array The filtered arguments for get_users().
+				 */
+				$user_query_args = apply_filters(
+					'custom_fields_snapshots_export_args',
+					$user_query_args,
+					'user_role',
+					$field,
+					array(
+						'user_exports' => $user_exports,
+					)
+				);
+
 				$role_users = get_users( $user_query_args );
-				$id_users   = get_users(
+
+				/**
+				 * Filters the arguments for retrieving users during the export process.
+				 *
+				 * This filter allows modification of the arguments passed to get_users() when
+				 * exporting user data. It can be used to adjust which users are included in the export.
+				 *
+				 * @since 1.2.0
+				 *
+				 * @param array  $args         The arguments for get_users().
+				 * @param string $context      The context of the export. Possible values are 'post', 'taxonomy', 'option', 'user', or 'comment'.
+				 * @param array  $field        The field configuration array.
+				 * @param array  $context_data Additional context-specific data.
+				 * @return array The filtered arguments for get_users().
+				 */
+				$user_roles_query_args = apply_filters(
+					'custom_fields_snapshots_export_args',
 					array(
 						'include' => $user_exports['ids'],
 						'fields'  => 'ID',
+					),
+					'user_id',
+					$field,
+					array(
+						'user_exports' => $user_exports,
 					)
 				);
-				$users      = array_unique( array_merge( $role_users, $id_users ) );
+
+				$id_users = get_users( $user_roles_query_args );
+				$users    = array_unique( array_merge( $role_users, $id_users ) );
 			} else {
 				$user_query_args['include'] = $user_exports['ids'];
-				$users                      = get_users( $user_query_args );
+
+				/**
+				 * Filters the arguments for retrieving users during the export process.
+				 *
+				 * This filter allows modification of the arguments passed to get_users() when
+				 * exporting user data. It can be used to adjust which users are included in the export.
+				 *
+				 * @since 1.2.0
+				 *
+				 * @param array  $args         The arguments for get_users().
+				 * @param string $context      The context of the export. Possible values are 'post', 'taxonomy', 'option', 'user', or 'comment'.
+				 * @param array  $field        The field configuration array.
+				 * @param array  $context_data Additional context-specific data.
+				 * @return array The filtered arguments for get_users().
+				 */
+				$user_query_args = apply_filters(
+					'custom_fields_snapshots_export_args',
+					$user_query_args,
+					'user_id',
+					$field,
+					array(
+						'user_exports' => $user_exports,
+					)
+				);
+
+				$users = get_users( $user_query_args );
 			}
 		} else {
+			/**
+			 * Filters the arguments for retrieving users during the export process.
+			 *
+			 * This filter allows modification of the arguments passed to get_users() when
+			 * exporting user data. It can be used to adjust which users are included in the export.
+			 *
+			 * @since 1.2.0
+			 *
+			 * @param array  $args         The arguments for get_users().
+			 * @param string $context      The context of the export. Possible values are 'post', 'taxonomy', 'option', 'user', or 'comment'.
+			 * @param array  $field        The field configuration array.
+			 * @param array  $context_data Additional context-specific data.
+			 * @return array The filtered arguments for get_users().
+			 */
+			$user_query_args = apply_filters(
+				'custom_fields_snapshots_export_args',
+				$user_query_args,
+				'user_id',
+				$field,
+				array(
+					'user_exports' => $user_exports,
+				)
+			);
+
 			$users = get_users( $user_query_args );
 		}
 
@@ -305,16 +447,22 @@ class Exporter {
 				/**
 				 * Filters the value of a user field before exporting.
 				 *
-				 * @since 1.1.0
+				 * @since 1.2.0
 				 *
-				 * @param mixed $value   The user field value.
-				 * @param int   $user_id The user ID.
+				 * @param mixed $value         The user field value.
+				 * @param string $context      The context of the export. Possible values are 'post', 'taxonomy', 'option', 'user', or 'comment'.
+				 * @param array  $field        The field configuration array.
+				 * @param array  $context_data Additional context-specific data.
 				 * @return mixed The filtered user field value.
 				 */
 				$user_data[ $user_id ] = apply_filters(
-					sprintf( 'custom_fields_snapshots_export_user_field_%s_value', sanitize_key( $field['name'] ) ),
+					'custom_fields_snapshots_export_field_value',
 					$this->processor->process_field_value( $field, $value ),
-					$user_id
+					'user',
+					$field,
+					array(
+						'user_id' => $user_id,
+					)
 				);
 
 				if ( ! $this->processor->has_nested_field_value( $user_data[ $user_id ] ) ) {
@@ -324,6 +472,140 @@ class Exporter {
 		}
 
 		return $user_data;
+	}
+
+	/**
+	 * Get comment field data for selected post types.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @param array $field      The field configuration.
+	 * @param array $post_types The selected post types.
+	 * @return array The comment field data.
+	 */
+	private function get_comment_field_data( $field, $post_types ) {
+		$comment_data = array();
+
+		foreach ( $post_types as $post_type ) {
+			$args = array(
+				'post_type' => $post_type,
+				'status'    => 'approve',
+			);
+
+			/**
+			 * Filters the arguments for retrieving comments during the export process.
+			 *
+			 * This filter allows modification of the arguments passed to get_comments() when
+			 * exporting comment data. It can be used to adjust which comments are included in the export.
+			 *
+			 * @since 1.2.0
+			 *
+			 * @param array  $args         The arguments for get_comments().
+			 * @param string $context      The context of the export. Possible values are 'post', 'taxonomy', 'option', 'user', or 'comment'.
+			 * @param array  $field        The field configuration array.
+			 * @param array  $context_data Additional context-specific data.
+			 * @return array The filtered arguments for get_comments().
+			 */
+			$args = apply_filters(
+				'custom_fields_snapshots_export_args',
+				$args,
+				'comments',
+				$field,
+				array(
+					'post_type' => $post_type,
+				)
+			);
+
+			$comments = get_comments( $args );
+
+			foreach ( $comments as $comment ) {
+				$value = get_field( $field['name'], 'comment_' . $comment->comment_ID, $this->processor->maybe_format_value( $field ) );
+
+				if ( null !== $value ) {
+					/**
+					 * Filters the value of a comment field before exporting.
+					 *
+					 * @since 1.2.0
+					 *
+					 * @param mixed  $value        The processed field value.
+					 * @param string $context      The context of the export. Possible values are 'post', 'taxonomy', 'option', 'user', or 'comment'.
+					 * @param array  $field        The field configuration array.
+					 * @param array  $context_data Additional context-specific data.
+					 * @return mixed The filtered field value to be exported.
+					 */
+					$comment_data[ $post_type ][ $comment->comment_ID ] = apply_filters(
+						'custom_fields_snapshots_export_field_value',
+						$this->processor->process_field_value( $field, $value ),
+						'comment',
+						$field,
+						array(
+							'comment_id' => $comment->comment_ID,
+							'post_type'  => $post_type,
+						)
+					);
+
+					if ( ! $this->processor->has_nested_field_value( $comment_data[ $post_type ][ $comment->comment_ID ] ) ) {
+						unset( $comment_data[ $post_type ][ $comment->comment_ID ] );
+					}
+				}
+			}
+		}
+
+		return $comment_data;
+	}
+
+
+	/**
+	 * Get taxonomy field data.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @param array $field      The field configuration.
+	 * @param array $taxonomies The selected taxonomies and their term IDs.
+	 * @return array The taxonomy field data.
+	 */
+	private function get_taxonomy_field_data( $field, $taxonomies ) {
+		$taxonomy_data = array();
+
+		foreach ( $taxonomies as $taxonomy => $term_ids ) {
+			if ( empty( $term_ids ) ) {
+				continue;
+			}
+
+			foreach ( $term_ids as $term_id ) {
+				$value = get_field( $field['name'], $taxonomy . '_' . $term_id, $this->processor->maybe_format_value( $field ) );
+
+				if ( null !== $value ) {
+					/**
+					 * Filters the value of a taxonomy field before exporting.
+					 *
+					 * @since 1.2.0
+					 *
+					 * @param mixed  $value        The processed field value.
+					 * @param string $context      The context of the export. Possible values are 'post', 'taxonomy', 'option', 'user', or 'comment'.
+					 * @param array  $field        The field configuration array.
+					 * @param array  $context_data Additional context-specific data.
+					 * @return mixed The filtered field value to be exported.
+					 */
+					$taxonomy_data[ $taxonomy ][ $term_id ] = apply_filters(
+						'custom_fields_snapshots_export_field_value',
+						$this->processor->process_field_value( $field, $value ),
+						'taxonomy',
+						$field,
+						array(
+							'term_id'  => $term_id,
+							'taxonomy' => $taxonomy,
+						)
+					);
+
+					if ( ! $this->processor->has_nested_field_value( $taxonomy_data[ $taxonomy ][ $term_id ] ) ) {
+						unset( $taxonomy_data[ $taxonomy ][ $term_id ] );
+					}
+				}
+			}
+		}
+
+		return $taxonomy_data;
 	}
 
 	/**

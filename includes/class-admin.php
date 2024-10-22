@@ -313,7 +313,7 @@ class Admin {
 
 				<div class="info-box">
 					<h3><?php esc_html_e( 'About', 'custom-fields-snapshots' ); ?></h3>
-					<p><?php esc_html_e( 'Custom Fields Snapshots allow you to easily create backups of your Advanced Custom Fields (ACF) data by exporting selected field groups, post types, users, and options. These snapshots enable version control, make it easier to share setups with team members, assist with migrations between WordPress environments, and enable quick restoration of previous configurations.', 'custom-fields-snapshots' ); ?></p>
+					<p><?php esc_html_e( 'Custom Fields Snapshots allow you to easily create backups of your Advanced Custom Fields (ACF) data by exporting post types, taxonomies, options, users, and comments. These snapshots enable version control, make it easier to share setups with team members, assist with migrations between WordPress environments, and allow quick restoration of previous configurations.', 'custom-fields-snapshots' ); ?></p>
 
 					<h3><?php esc_html_e( 'Contribute', 'custom-fields-snapshots' ); ?></h3>
 					<p><?php esc_html_e( 'Support the development of this plugin:', 'custom-fields-snapshots' ); ?></p>
@@ -424,10 +424,11 @@ class Admin {
 						<li><?php esc_html_e( 'Upload the snapshot JSON file (drag or select)', 'custom-fields-snapshots' ); ?></li>
 						<li><?php esc_html_e( 'Enable "Rollback changes on failure" (recommended)', 'custom-fields-snapshots' ); ?></li>
 						<li><?php esc_html_e( 'Click "Import Snapshot"', 'custom-fields-snapshots' ); ?></li>
-						<li><?php esc_html_e( 'Enable event logs in Settings if issues occur', 'custom-fields-snapshots' ); ?></li>
 					</ol>
 
-					<p><strong><?php esc_html_e( "While the import process is safe when using the rollback feature, it's always best to have a backup as an extra precaution.", 'custom-fields-snapshots' ); ?></strong></p>
+					<p><strong><?php esc_html_e( "Even with the rollback feature enabled, it's always a good idea to have a backup of your data for extra precaution.", 'custom-fields-snapshots' ); ?></strong></p>
+
+					<p><?php esc_html_e( 'If you encounter any issues, enable event logging in Settings and retry the import to troubleshoot the issue.', 'custom-fields-snapshots' ); ?></p>
 				</div>
 			</div>
 		</div>
@@ -482,10 +483,12 @@ class Admin {
 			array(
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
 				'nonce'   => wp_create_nonce( 'custom-fields-snapshots-nonce' ),
-				'L10n'    => array(
+				'l10n'    => array(
 					'importText'                   => __( 'Import Snapshot', 'custom-fields-snapshots' ),
 					'importingText'                => __( 'Importing...', 'custom-fields-snapshots' ),
 					'eventLogText'                 => __( 'Event Log', 'custom-fields-snapshots' ),
+					'copyText'                     => __( 'Copy Log', 'custom-fields-snapshots' ),
+					'copiedText'                   => __( 'Copied', 'custom-fields-snapshots' ),
 					'noFileSelected'               => __( 'Please select a file to proceed.', 'custom-fields-snapshots' ),
 					'invalidFileType'              => __( 'Invalid file type selected. Please select a JSON file.', 'custom-fields-snapshots' ),
 					'rollbackDisabledConfirmation' => __( '"Rollback changes on failure" is turned off. Are you sure you want to proceed?', 'custom-fields-snapshots' ),
@@ -530,20 +533,22 @@ class Admin {
 		
 					<div class="export-step">
 						<span class="step-number">2</span>
-						<h3><?php esc_html_e( 'Post Types, Users and Options', 'custom-fields-snapshots' ); ?></h3>
+						<h3><?php esc_html_e( 'Content Types', 'custom-fields-snapshots' ); ?></h3>
 						<div class="post-types-container">
 							<div class="post-type-section">
-								<h4><?php esc_html_e( 'Public Post Types', 'custom-fields-snapshots' ); ?></h4>
+								<h4><?php esc_html_e( 'Post Types', 'custom-fields-snapshots' ); ?></h4>
 
 								<div class="scrollable-content">
 									<?php $this->render_post_types_selection( 'public' ); ?>
+									<?php $this->render_post_types_selection( 'private' ); ?>
 								</div>
 							</div>
 							<div class="post-type-section">
-								<h4><?php esc_html_e( 'Private Post Types', 'custom-fields-snapshots' ); ?></h4>
+								<h4><?php esc_html_e( 'Taxonomies', 'custom-fields-snapshots' ); ?></h4>
 								
 								<div class="scrollable-content">
-									<?php $this->render_post_types_selection( 'private' ); ?>
+									<?php $this->render_taxonomies_selection( 'public' ); ?>
+									<?php $this->render_taxonomies_selection( 'private' ); ?>
 								</div>
 							</div>
 							<div class="site-wide-section">
@@ -567,9 +572,9 @@ class Admin {
 											<input type="checkbox" 
 												name="options" 
 												value="1" 
-												class="post-type-checkbox options-checkbox"
-												<?php echo ! $is_acf_pro_active ? 'disabled' : ''; ?>>
-											<span class="custom-fields-snapshot-post-item">
+												class="options-checkbox"
+												<?php disabled( ! $is_acf_pro_active ); ?>>
+												<span class="custom-fields-snapshot-post-item">
 												<span><?php esc_html_e( 'Options', 'custom-fields-snapshots' ); ?></span>
 												<?php if ( ! $is_acf_pro_active ) : ?>
 													<span class="tooltip">
@@ -577,6 +582,19 @@ class Admin {
 														<span class="tooltiptext"><?php esc_html_e( 'ACF Pro required', 'custom-fields-snapshots' ); ?></span>
 													</span>
 												<?php endif; ?>
+											</span>
+										</label>
+									</div>
+
+									<div class="post-type-selection">
+										<label>
+											<input type="checkbox" name="comments" value="1" class="comments-checkbox">
+											<span class="custom-fields-snapshot-post-item">
+												<span><?php esc_html_e( 'Comments', 'custom-fields-snapshots' ); ?></span>
+													<span class="tooltip">
+														<span class="dashicons dashicons-info"></span>
+														<span class="tooltiptext"><?php esc_html_e( 'Requires at least one post type to be selected', 'custom-fields-snapshots' ); ?></span>
+													</span>
 											</span>
 										</label>
 									</div>
@@ -634,11 +652,17 @@ class Admin {
 			'custom-fields-snapshots-export',
 			'customFieldsSnapshots',
 			array(
-				'L10n' => array(
-					'selectFieldGroup' => __( 'Please select at least one Field Group.', 'custom-fields-snapshots' ),
-					'selectDataTypes'  => __( 'Please select at least one Post Type, User, User Role, or Options.', 'custom-fields-snapshots' ),
-					/* translators: %s: Post type name */
-					'selectPostId'     => __( 'Please select at least one post ID for post type: %s', 'custom-fields-snapshots' ),
+				'l10n' => array(
+					'selectFieldGroup'          => __( 'Please select at least one Field Group.', 'custom-fields-snapshots' ),
+					'selectContentTypes'        => __( 'Please select at least one content type to export (Post Types, Users, Comments, Taxonomies, or Options).', 'custom-fields-snapshots' ),
+					/* translators: %s: Post type label */
+					'selectPostId'              => __( 'Please select at least one post ID for post type: %s', 'custom-fields-snapshots' ),
+					'selectPostTypeForIds'      => __( 'Please select at least one Post Type to export the selected Post IDs.', 'custom-fields-snapshots' ),
+					'selectUserId'              => __( 'Please select at least one User ID to export Users.', 'custom-fields-snapshots' ),
+					'selectUserRoles'           => __( 'Please select at least one User Role to export User Roles.', 'custom-fields-snapshots' ),
+					'selectPostTypeForComments' => __( 'Please select at least one Post Type to export Comments.', 'custom-fields-snapshots' ),
+					/* translators: %s: Taxonomy label */
+					'selectTermForTaxonomy'     => __( 'Please select at least one term for taxonomy: %s', 'custom-fields-snapshots' ),
 				),
 			)
 		);
@@ -651,6 +675,22 @@ class Admin {
 	 */
 	private function render_field_groups_selection() {
 		$field_groups = acf_get_field_groups();
+
+		/**
+		 * Filter whether to include inactive field groups in the render_field_groups_selection() function.
+		 *
+		 * @since 1.2.0
+		 *
+		 * @param bool $include_inactive Whether to include inactive field groups. Default false.
+		 */
+		if ( ! apply_filters( 'custom_fields_snapshots_render_inactive_field_groups', false ) ) {
+			$field_groups = array_filter(
+				$field_groups,
+				function ( $field_group ) {
+					return ! isset( $field_group['active'] ) || false !== $field_group['active'];
+				}
+			);
+		}
 
 		if ( empty( $field_groups ) ) {
 			esc_html_e( 'No field groups found.', 'custom-fields-snapshots' );
@@ -698,8 +738,22 @@ class Admin {
 	 * @param string $type The type of post types to render ('public' or 'private').
 	 */
 	private function render_post_types_selection( $type = 'public' ) {
+		/**
+		 * Filters the arguments used to retrieve post types for export.
+		 *
+		 * This filter allows modification of the arguments passed to get_post_types() when
+		 * retrieving post types for the export process. It can be used to customize which
+		 * post types are available for export.
+		 *
+		 * @since 1.2.0
+		 *
+		 * @param array $args The arguments for get_post_types(). Default is an empty array.
+		 * @return array The filtered arguments for get_post_types().
+		 */
+		$args = apply_filters( 'custom_fields_snapshots_render_export_post_types', array() );
+
 		// Get all post types.
-		$post_types = get_post_types( array(), 'objects' );
+		$post_types = get_post_types( $args, 'objects' );
 
 		// Filter post types based on public/private status.
 		$post_types = array_filter(
@@ -717,59 +771,60 @@ class Admin {
 		 * @param array $post_types The post types to be exported.
 		 * @param string $type The type of post types to render ('public' or 'private').
 		 */
-		$post_types = apply_filters( sprintf( 'custom_fields_snapshots_export_%s_post_types', sanitize_key( $type ) ), $post_types );
+		$post_types = apply_filters( 'custom_fields_snapshots_export_post_types', $post_types, $type );
 
 		/**
 		 * Filters the post types to be excluded from export.
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param array $excluded_post_types The post types to be excluded from export.
-		 * @param string $type The type of post types to render ('public' or 'private').
+		 * @param array $post_types The post types to be excluded from export.
+		 * @param string $type      The type of post types to render ('public' or 'private').
 		 */
 		$excluded_post_types = apply_filters(
-			sprintf( 'custom_fields_snapshots_export_%s_excluded_post_types', sanitize_key( $type ) ),
+			'custom_fields_snapshots_export_exclude_post_types',
 			( 'public' === $type )
-				? array(
-					'attachment',
-				)
-				: array(
-					'acf-field',
-					'acf-field-group',
-					'acf-post-type',
-					'acf-taxonomy',
-					'acf-ui-options-page',
-					'custom_css',
-					'customize_changeset',
-					'nav_menu_item',
-					'oembed_cache',
-					'user_request',
-					'wp_block',
-					'wp_font_face',
-					'wp_font_family',
-					'wp_global_styles',
-					'wp_navigation',
-					'wp_pattern',
-					'wp_template',
-					'wp_template_part',
-				)
+			? array(
+				'attachment',
+			)
+			: array(
+				'acf-field',
+				'acf-field-group',
+				'acf-post-type',
+				'acf-taxonomy',
+				'acf-ui-options-page',
+				'custom_css',
+				'customize_changeset',
+				'nav_menu_item',
+				'oembed_cache',
+				'user_request',
+				'wp_block',
+				'wp_font_face',
+				'wp_font_family',
+				'wp_global_styles',
+				'wp_navigation',
+				'wp_pattern',
+				'wp_template',
+				'wp_template_part',
+			),
+			$type
 		);
 
 		// Remove excluded post types.
 		$post_types = array_diff_key( $post_types, array_flip( $excluded_post_types ) );
 
-		if ( empty( $post_types ) ) {
-			/* translators: %s: Type of post types (e.g., 'public' or 'private') */
-			printf( esc_html__( 'No %s post types found.', 'custom-fields-snapshots' ), esc_html( $type ) );
-			return;
-		}
+		$has_posts = ! empty( $post_types );
 
 		$type_label = ( 'public' === $type ) ? __( 'Public', 'custom-fields-snapshots' ) : __( 'Private', 'custom-fields-snapshots' );
 
 		?>
 		<div class="select-all-post-types-container post-type-selection">
-			<label>
-				<input type="checkbox" class="select-all-<?php echo esc_attr( $type ); ?>-post-types" data-type="<?php echo esc_attr( $type ); ?>">
+			<label <?php echo ! $has_posts ? 'class="disabled"' : ''; ?>>
+				<input
+					type="checkbox"
+					class="select-all-<?php echo esc_attr( $type ); ?>-post-types"
+					data-type="<?php echo esc_attr( $type ); ?>"
+					<?php disabled( ! $has_posts ); ?>>
 				<?php
 				/* translators: %s: Post type label (e.g., "Public" or "Private") */
 				printf( esc_html__( 'All %s Post Types', 'custom-fields-snapshots' ), esc_html( $type_label ) );
@@ -801,7 +856,7 @@ class Admin {
 			$has_posts = ! empty( $posts );
 
 			$slug_text = sprintf(
-				/* translators: %s: Slug (could be Post Type or User Role) */
+				/* translators: %s: Slug (could be Post Type, Taxonomy or User Role) */
 				esc_html__( 'Slug: %s', 'custom-fields-snapshots' ),
 				esc_html( $post_type->name )
 			);
@@ -838,7 +893,7 @@ class Admin {
 						$post_title = get_the_title( $post );
 						$post_id    = absint( $post->ID );
 
-						/* translators: %d: Item ID (could be Post ID or User ID) */
+						/* translators: %d: Item ID (could be Post ID, Term ID, or User ID) */
 						$id_string = sprintf( __( 'ID: %d', 'custom-fields-snapshots' ), $post_id );
 
 						$date_string = '';
@@ -889,6 +944,177 @@ class Admin {
 	}
 
 	/**
+	 * Render the selection of taxonomies for export.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @param string $type The type of taxonomies to render ('public' or 'private').
+	 */
+	private function render_taxonomies_selection( $type = 'public' ) {
+		/**
+		 * Filters the arguments used to retrieve taxonomies for export.
+		 *
+		 * This filter allows modification of the arguments passed to get_taxonomies() when
+		 * retrieving taxonomies for the export process. It can be used to customize which
+		 * taxonomies are available for export.
+		 *
+		 * @since 1.2.0
+		 *
+		 * @param array $args The arguments for get_taxonomies(). Default is an empty array.
+		 * @return array The filtered arguments for get_taxonomies().
+		 */
+		$args = apply_filters( 'custom_fields_snapshots_render_export_taxonomies', array() );
+
+		// Get all taxonomies.
+		$taxonomies = get_taxonomies( $args, 'objects' );
+
+		// Filter taxonomies based on public/private status.
+		$taxonomies = array_filter(
+			$taxonomies,
+			function ( $taxonomy ) use ( $type ) {
+				return ( 'public' === $type ) ? $taxonomy->public : ! $taxonomy->public;
+			}
+		);
+
+		/**
+		 * Filters the taxonomies to be exported.
+		 *
+		 * @since 1.2.0
+		 *
+		 * @param array  $taxonomies The taxonomies to be exported.
+		 * @param string $type       The type of taxonomies to render ('public' or 'private').
+		 */
+		$taxonomies = apply_filters( 'custom_fields_snapshots_export_taxonomies', $taxonomies, $type );
+
+		/**
+		 * Filters the taxonomies to be excluded from export.
+		 *
+		 * @since 1.2.0
+		 *
+		 * @param array  $excluded_taxonomies The taxonomies to be excluded from export.
+		 * @param string $type                The type of taxonomies to render ('public' or 'private').
+		 */
+		$excluded_taxonomies = apply_filters(
+			'custom_fields_snapshots_export_exclude_taxonomies',
+			( 'public' === $type )
+			? array(
+				'post_format',
+			)
+			: array(
+				'nav_menu',
+				'link_category',
+				'wp_theme',
+				'wp_template_part_area',
+				'wp_pattern_category',
+			),
+			$type
+		);
+
+		// Remove excluded taxonomies.
+		$taxonomies = array_diff_key( $taxonomies, array_flip( $excluded_taxonomies ) );
+
+		$has_taxonomies = ! empty( $taxonomies );
+
+		$type_label = ( 'public' === $type ) ? __( 'Public', 'custom-fields-snapshots' ) : __( 'Private', 'custom-fields-snapshots' );
+
+		?>
+	<div class="select-all-taxonomies-container taxonomy-selection">
+		<label <?php echo ! $has_taxonomies ? 'class="disabled"' : ''; ?>>
+			<input
+				type="checkbox"
+				class="select-all-<?php echo esc_attr( $type ); ?>-taxonomies"
+				data-type="<?php echo esc_attr( $type ); ?>"
+				<?php disabled( ! $has_taxonomies ); ?>>
+			<?php
+			/* translators: %s: Taxonomy type label (e.g., "Public" or "Private") */
+			printf( esc_html__( 'All %s Taxonomies', 'custom-fields-snapshots' ), esc_html( $type_label ) );
+			?>
+		</label>
+	</div>
+		<?php
+		foreach ( $taxonomies as $taxonomy ) :
+			$terms = get_terms(
+				array(
+					'taxonomy'   => $taxonomy->name,
+					'hide_empty' => false,
+				)
+			);
+
+			$has_terms = ! empty( $terms );
+
+			$slug_text = sprintf(
+			/* translators: %s: Slug (could be Post Type, Taxonomy or User Role) */
+				esc_html__( 'Slug: %s', 'custom-fields-snapshots' ),
+				esc_html( $taxonomy->name )
+			);
+
+			$tooltip_content = $has_terms ? $slug_text : esc_html__( 'No terms found', 'custom-fields-snapshots' ) . "\n" . $slug_text;
+
+			?>
+		<div class="taxonomy-selection">
+			<label <?php echo ! $has_terms ? 'class="disabled"' : ''; ?>>
+				<input
+					type="checkbox"
+					name="taxonomies[]"
+					value="<?php echo esc_attr( $taxonomy->name ); ?>"
+					class="taxonomy-checkbox <?php echo esc_attr( $type ); ?>-taxonomy-checkbox"
+					<?php disabled( ! $has_terms ); ?>>
+				<span class="custom-fields-snapshot-taxonomy-item">
+					<span><?php echo esc_html( $taxonomy->label ); ?></span>
+					<span class="tooltip">
+						<span class="dashicons dashicons-info"></span>
+						<span class="tooltiptext"><?php echo esc_html( $tooltip_content ); ?></span>
+					</span>
+				</span>
+			</label>
+			<?php if ( $has_terms ) : ?>
+			<div class="term-ids-selection" style="margin-left:20px;display:none">
+				<label style="font-weight:bold">
+					<input type="checkbox" class="select-all-terms" data-taxonomy="<?php echo esc_attr( $taxonomy->name ); ?>">
+					<?php esc_html_e( 'All', 'custom-fields-snapshots' ); ?>
+				</label>
+				<?php foreach ( $terms as $term ) : ?>
+				<label>
+					<input type="checkbox" name="term_ids[<?php echo esc_attr( $taxonomy->name ); ?>][]" value="<?php echo esc_attr( $term->term_id ); ?>" class="post-id-checkbox">
+					<?php
+					$term_name = $term->name;
+					$term_id   = absint( $term->term_id );
+
+					/* translators: %d: Item ID (could be Post ID, Term ID, or User ID) */
+					$id_string = sprintf( __( 'ID: %d', 'custom-fields-snapshots' ), $term_id );
+
+					$tooltip_content = $id_string;
+
+					/* translators: %1$s: Term name, %2$s: Tooltip content with term information */
+					$output = sprintf(
+						'<span class="custom-fields-snapshot-term-item">
+                            <span class="term-name">%1$s</span>
+                            <span class="tooltip">
+                                <span class="dashicons dashicons-info"></span>
+                                <span class="tooltiptext">%2$s</span>
+                            </span>
+                        </span>',
+						esc_html( $term_name ),
+						$tooltip_content
+					);
+
+					echo wp_kses(
+						$output,
+						array(
+							'span' => array( 'class' => array() ),
+						)
+					);
+					?>
+				</label>
+				<?php endforeach; ?>
+			</div>
+			<?php endif; ?>
+		</div>
+			<?php
+		endforeach;
+	}
+
+	/**
 	 * Render the selection of users for export.
 	 *
 	 * @since 1.1.0
@@ -899,9 +1125,20 @@ class Admin {
 		 *
 		 * @since 1.1.0
 		 *
-		 * @param array $users The users to be exported.
+		 * @param array $args The arguments for get_users().
 		 */
-		$users = apply_filters( 'custom_fields_snapshots_export_users', get_users( array( 'fields' => array( 'ID', 'user_login', 'display_name' ) ) ) );
+		$args = apply_filters(
+			'custom_fields_snapshots_render_export_users',
+			array(
+				'fields' => array(
+					'ID',
+					'user_login',
+					'display_name',
+				),
+			),
+		);
+
+		$users = get_users( $args );
 
 		$has_users = ! empty( $users );
 
@@ -910,7 +1147,7 @@ class Admin {
 			<label <?php echo ! $has_users ? 'class="disabled"' : ''; ?>>
 				<input
 					type="checkbox"
-					class="post-type-checkbox users-checkbox"
+					class="users-checkbox"
 					data-type="users"
 					<?php disabled( ! $has_users ); ?>>
 				<?php esc_html_e( 'Users', 'custom-fields-snapshots' ); ?>
@@ -928,15 +1165,15 @@ class Admin {
 						$post_title = $user->display_name;
 						$post_id    = absint( $user->ID );
 
-						/* translators: %d: Item ID (could be Post ID or User ID) */
+						/* translators: %d: Item ID (could be Post ID, Term ID, or User ID) */
 						$id_string = sprintf( __( 'ID: %d', 'custom-fields-snapshots' ), $post_id );
 
 						/* translators: %s: Username */
 						$tooltip_content = sprintf( __( 'Username: %s', 'custom-fields-snapshots' ), $user->user_login );
 
-						/* translators: 1: User display name, 2: Tooltip content with user information */
+						/* translators: %1$s: User display name, %2$s: Tooltip content with user information */
 						$output = sprintf(
-							'<span class="custom-fields-snapshot-post-item">
+							'<span class="custom-fields-snapshot-user-item">
 								<span class="post-title">%1$s</span>
 								<span class="tooltip">
 									<span class="dashicons dashicons-info"></span>
@@ -976,16 +1213,16 @@ class Admin {
 		 *
 		 * @param array $roles The user roles to be exported.
 		 */
-		$roles = apply_filters( 'custom_fields_snapshots_export_user_roles', wp_roles()->get_names() );
+		$roles = apply_filters( 'custom_fields_snapshots_render_export_user_roles', wp_roles()->get_names() );
 
 		$has_roles = ! empty( $roles );
 
 		?>
-		<div class="user-selection">
+		<div class="user-role-selection">
 			<label <?php echo ! $has_roles ? 'class="disabled"' : ''; ?>>
 				<input
 					type="checkbox"
-					class="post-type-checkbox user-roles-checkbox"
+					class="user-roles-checkbox"
 					data-type="user-roles"
 					<?php disabled( ! $has_roles ); ?>>
 				<?php esc_html_e( 'User Roles', 'custom-fields-snapshots' ); ?>
@@ -998,12 +1235,12 @@ class Admin {
 				</label>
 				<?php
 				foreach ( $roles as $role_value => $role_name ) :
-					/* translators: %s: Slug (could be Post Type or User Role) */
+					/* translators: %s: Slug (could be Post Type, Taxonomy or User Role) */
 					$slug_text = sprintf( esc_html__( 'Slug: %s', 'custom-fields-snapshots' ), esc_html( $role_value ) );
 					?>
 					<label>
 						<input type="checkbox" name="user_roles[]" value="<?php echo esc_attr( $role_value ); ?>" class="post-id-checkbox">
-						<span class="custom-fields-snapshot-post-type-item">
+						<span class="custom-fields-snapshot-user-item">
 							<span><?php echo esc_html( translate_user_role( $role_name ) ); ?></span>
 							<span class="tooltip">
 								<span class="dashicons dashicons-info"></span>
@@ -1203,11 +1440,19 @@ class Admin {
 					return false;
 				}
 
+				if ( isset( $field_data['post_types'] ) && ! $this->is_valid_post_types_data( $field_data['post_types'] ) ) {
+					return false;
+				}
+
+				if ( isset( $field_data['taxonomies'] ) && ! $this->is_valid_taxonomies_data( $field_data['taxonomies'] ) ) {
+					return false;
+				}
+
 				if ( isset( $field_data['users'] ) && ! $this->is_valid_user_data( $field_data['users'] ) ) {
 					return false;
 				}
 
-				if ( isset( $field_data['post_types'] ) && ! $this->is_valid_post_types_data( $field_data['post_types'] ) ) {
+				if ( isset( $field_data['comments'] ) && ! $this->is_valid_comments_data( $field_data['comments'] ) ) {
 					return false;
 				}
 			}
@@ -1227,19 +1472,6 @@ class Admin {
 	 */
 	private function is_valid_group( $group_key, $fields ) {
 		return is_string( $group_key ) && is_array( $fields );
-	}
-
-	/**
-	 * Validate a field name and its data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param mixed $field_name The field name to validate.
-	 * @param mixed $field_data The field data to validate.
-	 * @return bool True if valid, false otherwise.
-	 */
-	private function is_valid_field( $field_name, $field_data ) {
-		return is_string( $field_name ) && is_array( $field_data );
 	}
 
 	/**
@@ -1263,7 +1495,7 @@ class Admin {
 			return true;
 		}
 
-		if ( is_string( $value ) || is_int( $value ) || is_bool( $value ) || is_null( $value ) || is_object( $value ) ) {
+		if ( is_scalar( $value ) || is_object( $value ) || is_null( $value ) ) {
 			return true;
 		}
 
@@ -1271,25 +1503,16 @@ class Admin {
 	}
 
 	/**
-	 * Validate post type data.
+	 * Validate a field name and its data.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param mixed $value The value to validate.
+	 * @param mixed $field_name The field name to validate.
+	 * @param mixed $field_data The field data to validate.
 	 * @return bool True if valid, false otherwise.
 	 */
-	private function is_valid_post_type_data( $value ) {
-		if ( ! is_array( $value ) ) {
-			return false;
-		}
-
-		foreach ( $value as $post_id => $post_value ) {
-			if ( ! is_int( $post_id ) || ! $this->validate_option_value( $post_value ) ) {
-				return false;
-			}
-		}
-
-		return true;
+	private function is_valid_field( $field_name, $field_data ) {
+		return is_string( $field_name ) && is_array( $field_data );
 	}
 
 	/**
@@ -1321,6 +1544,37 @@ class Admin {
 	}
 
 	/**
+	 * Validate the structure of taxonomies data.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @param array $taxonomies_data The taxonomies data to validate.
+	 * @return bool True if the structure is valid, false otherwise.
+	 */
+	private function is_valid_taxonomies_data( $taxonomies_data ) {
+		if ( ! is_array( $taxonomies_data ) ) {
+			return false;
+		}
+
+		foreach ( $taxonomies_data as $taxonomy => $terms ) {
+			if ( ! is_string( $taxonomy ) || ! is_array( $terms ) ) {
+				return false;
+			}
+
+			foreach ( $terms as $term_id => $value ) {
+				if ( ! is_numeric( $term_id ) ) {
+					return false;
+				}
+				if ( ! $this->validate_option_value( $value ) ) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Validate user data structure.
 	 *
 	 * @since 1.1.0
@@ -1336,6 +1590,37 @@ class Admin {
 		foreach ( $user_data as $user_id => $value ) {
 			if ( ! is_int( $user_id ) || ! $this->validate_option_value( $value ) ) {
 				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validate the structure of comments data.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @param array $comments_data The comments data to validate.
+	 * @return bool True if the structure is valid, false otherwise.
+	 */
+	private function is_valid_comments_data( $comments_data ) {
+		if ( ! is_array( $comments_data ) ) {
+			return false;
+		}
+
+		foreach ( $comments_data as $post_type => $comments ) {
+			if ( ! is_string( $post_type ) || ! is_array( $comments ) ) {
+				return false;
+			}
+
+			foreach ( $comments as $comment_id => $value ) {
+				if ( ! is_numeric( $comment_id ) ) {
+					return false;
+				}
+				if ( ! $this->validate_option_value( $value ) ) {
+					return false;
+				}
 			}
 		}
 
@@ -1375,7 +1660,9 @@ class Admin {
 		$exports = array(
 			'post_types' => array(),
 			'post_ids'   => array(),
+			'term_ids'   => array(),
 			'options'    => false,
+			'comments'   => false,
 			'users'      => array(
 				'roles' => array(),
 				'ids'   => array(),
@@ -1396,6 +1683,10 @@ class Admin {
 			? $this->sanitize_post_ids( wp_unslash( $_POST['post_ids'] ) ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			: array();
 
+		$exports['term_ids'] = isset( $_POST['term_ids'] ) && is_array( $_POST['term_ids'] )
+			? $this->sanitize_term_ids( wp_unslash( $_POST['term_ids'] ) ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			: array();
+
 		$exports['users']['roles'] = isset( $_POST['user_roles'] ) && is_array( $_POST['user_roles'] )
 			? array_map( 'sanitize_key', wp_unslash( $_POST['user_roles'] ) )
 			: array();
@@ -1404,30 +1695,64 @@ class Admin {
 			? array_map( 'absint', wp_unslash( $_POST['users'] ) )
 			: array();
 
+		$exports['comments'] = filter_input( INPUT_POST, 'comments', FILTER_VALIDATE_BOOLEAN );
+
+		$exports['taxonomies'] = isset( $_POST['taxonomies'] ) && is_array( $_POST['taxonomies'] )
+			? array_map( 'sanitize_key', wp_unslash( $_POST['taxonomies'] ) )
+			: array();
+
 		$errors = array();
 
+		// Validate field groups.
 		if ( empty( $field_groups ) ) {
 			$errors[] = __( 'Please select at least one Field Group.', 'custom-fields-snapshots' );
 		}
 
-		if ( ! $exports['options'] &&
-			empty( $exports['post_types'] ) &&
-			empty( $exports['users']['roles'] ) &&
-			empty( $exports['users']['ids'] ) ) {
-			$errors[] = __( 'Please select at least one Post Type, User, User Role, or Options.', 'custom-fields-snapshots' );
+		// Validate post types and post IDs.
+		if ( ! empty( $exports['post_types'] ) ) {
+			foreach ( $exports['post_types'] as $post_type ) {
+				if ( empty( $exports['post_ids'][ $post_type ] ) ) {
+					$post_type_object = get_post_type_object( $post_type );
+					$post_type_label  = $post_type_object ? $post_type_object->label : $post_type;
+					/* translators: %s: Post type label */
+					$errors[] = sprintf( __( 'Please select at least one post ID for post type: %s', 'custom-fields-snapshots' ), $post_type_label );
+				}
+			}
+		} elseif ( ! empty( $exports['post_ids'] ) ) {
+			$errors[] = __( 'Please select at least one Post Type to go with the selected Post IDs.', 'custom-fields-snapshots' );
 		}
 
-		if ( ! $exports['options'] &&
-			empty( $exports['post_ids'] ) &&
-			empty( $exports['users']['roles'] ) &&
-			empty( $exports['users']['ids'] ) ) {
-			$errors[] = __( 'Please select at least one Post ID, User ID, or User Role.', 'custom-fields-snapshots' );
+		// Validate comments.
+		if ( ! empty( $exports['comments'] ) && empty( $exports['post_types'] ) ) {
+			$errors[] = __( 'Please select at least one Post Type when exporting Comments.', 'custom-fields-snapshots' );
+		}
+
+		// Validate taxonomies.
+		if ( ! empty( $exports['taxonomies'] ) ) {
+			foreach ( $exports['taxonomies'] as $taxonomy ) {
+				if ( empty( $exports['term_ids'][ $taxonomy ] ) ) {
+					$taxonomy_object = get_taxonomy( $taxonomy );
+					$taxonomy_label  = $taxonomy_object ? $taxonomy_object->label : $taxonomy;
+					/* translators: %s: Taxonomy label */
+					$errors[] = sprintf( __( 'Please select at least one term for taxonomy: %s', 'custom-fields-snapshots' ), $taxonomy_label );
+				}
+			}
+		}
+
+		// Ensure at least one content type is selected.
+		if ( empty( $exports['post_types'] ) &&
+				empty( $exports['users']['roles'] ) &&
+				empty( $exports['users']['ids'] ) &&
+				empty( $exports['comments'] ) &&
+				empty( $exports['taxonomies'] ) &&
+				empty( $exports['options'] ) ) {
+			$errors[] = __( 'Please select at least one content type to export (Post Types, Taxonomies, Users, Comments, or Options).', 'custom-fields-snapshots' );
 		}
 
 		if ( ! empty( $errors ) ) {
-			$error_message = implode( '<br>', $errors );
+			$error_message = implode( "\n", $errors );
 			wp_die(
-				esc_html( $error_message ),
+				wp_kses_post( nl2br( $error_message ) ),
 				esc_html( __( 'Export Validation Error', 'custom-fields-snapshots' ) ),
 				array(
 					'response'  => 400,
@@ -1455,7 +1780,7 @@ class Admin {
 		// Check if there's any data to export.
 		if ( ! $this->exporter->has_data( $export_data ) ) {
 			wp_die(
-				esc_html( __( 'No data to export for the selected field groups and post types, users, or options.', 'custom-fields-snapshots' ) ),
+				esc_html( __( 'No data to export for the selected field groups and post types, taxonomies, options, users, or comments.', 'custom-fields-snapshots' ) ),
 				esc_html( __( 'Export Error', 'custom-fields-snapshots' ) ),
 				array(
 					'response'  => 400,
@@ -1513,6 +1838,28 @@ class Admin {
 			}
 
 			$sanitized[ $sanitized_post_type ] = array_filter( $sanitized_ids );
+		}
+
+		return $sanitized;
+	}
+
+	/**
+	 * Sanitize an array of term IDs grouped by taxonomy.
+	 *
+	 * This function takes an array of term IDs organized by taxonomy and sanitizes both
+	 * the taxonomy keys and the term IDs. It ensures that taxonomy names are valid keys
+	 * and that all term IDs are positive integers.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $term_ids An array of term IDs grouped by taxonomy.
+	 * @return array Sanitized array of term IDs, with sanitized taxonomy keys and integer term IDs.
+	 */
+	private function sanitize_term_ids( $term_ids ) {
+		$sanitized = array();
+
+		foreach ( $term_ids as $taxonomy => $ids ) {
+			$sanitized[ sanitize_key( $taxonomy ) ] = array_map( 'absint', $ids );
 		}
 
 		return $sanitized;
