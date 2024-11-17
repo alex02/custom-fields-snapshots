@@ -16,10 +16,10 @@ Custom Fields Snapshots simplifies ACF data management, offering a reliable solu
 
 ## Installation
 
-1. Ensure that Advanced Custom Fields (ACF) or ACF Pro is installed and activated.
-2. Upload the plugin files to the `/wp-content/plugins/custom-fields-snapshots` directory, or install the plugin through the WordPress plugins screen directly.
-3. Activate the plugin through the 'Plugins' screen in WordPress.
-4. Use the Field Snapshots screen to configure the plugin and manage your snapshots.
+1. Navigate to **Tools > Custom Fields Snapshots** in your WordPress admin panel.
+2. On the **Export** tab, select the field groups, post types, taxonomies, options, specific posts, terms, users, or user roles you want to export.
+3. Click **Export Snapshot** to download a JSON file of your data.
+4. To import, go to the **Import** tab, upload the JSON file, and click **Import Snapshot**.
 
 ## How to Use
 
@@ -57,6 +57,10 @@ There's no hard limit set by the plugin, but very large snapshots may be affecte
 ### Is the plugin multisite compatible?
 
 Yes, the plugin supports WordPress Multisite installations, allowing you to manage ACF data across all network sites.
+
+### Will the plugin slow down my site? ###
+
+No, the plugin is designed to be lightweight. It does not load any code on the front end of your site. In the admin area, it only loads the bare minimum code needed for functionality. Additional code is activated only when required, such as on the Export or Import pages or during the import process.
 
 ## Hooks
 
