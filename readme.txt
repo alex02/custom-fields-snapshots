@@ -2,8 +2,8 @@
 Contributors: alexgeorgiev
 Tags: acf, custom fields, export, import, snapshot
 Requires at least: 6.0
-Tested up to: 6.6
-Stable tag: 1.2.0
+Tested up to: 6.7
+Stable tag: 1.2.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -37,10 +37,10 @@ Custom Fields Snapshots simplifies ACF data management, offering a reliable solu
 
 == How to Use ==
 
-1. Navigate to the 'Field Snapshots' menu in your WordPress admin panel.
-2. Select the field groups, post types, taxonomies, options, specific posts, terms, users, or user roles you want to export.
-3. Click 'Export Snapshot' to download a JSON file of your data.
-4. To import, upload the JSON file and click 'Import Snapshot'.
+1. Navigate to **Tools > Custom Fields Snapshots** in your WordPress admin panel.
+2. On the **Export** tab, select the field groups, post types, taxonomies, options, specific posts, terms, users, or user roles you want to export.
+3. Click **Export Snapshot** to download a JSON file of your data.
+4. To import, go to the **Import** tab, upload the JSON file, and click **Import Snapshot**.
 
 == Frequently Asked Questions ==
 
@@ -72,6 +72,10 @@ There's no hard limit set by the plugin, but very large snapshots may be affecte
 
 Yes, the plugin supports WordPress Multisite installations, allowing you to manage ACF data across all network sites.
 
+= Will the plugin slow down my site? =
+
+No, the plugin is designed to be lightweight. It does not load any code on the front end of your site. In the admin area, it only loads the bare minimum code needed for functionality. Additional code is activated only when required, such as on the Export or Import pages or during the import process.
+
 == Screenshots ==
 
 1. Export interface - Select field groups, post types, taxonomies, options, users, user roles and/or comments to export
@@ -79,6 +83,11 @@ Yes, the plugin supports WordPress Multisite installations, allowing you to mana
 3. Settings page - Configure plugin settings
 
 == Changelog ==
+
+= 1.2.1 =
+* Moved menu items to the Tools menu
+* Added a "Manage Snapshots" link on the Plugins page
+* Added missing group_key to rollback hooks
 
 = 1.2.0 =
 * Ability to export data from taxonomies and comments
@@ -102,6 +111,11 @@ Yes, the plugin supports WordPress Multisite installations, allowing you to mana
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.2.1 =
+* Moved menu items to the Tools menu
+* Added a "Manage Snapshots" link on the Plugins page
+* Added missing group_key to rollback hooks
 
 = 1.2.0 =
 * Ability to export data from taxonomies and comments

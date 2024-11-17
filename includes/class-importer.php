@@ -869,21 +869,21 @@ class Importer {
 					// Handle post types.
 					foreach ( $field_data['post_types'] as $post_type => $posts ) {
 						foreach ( $posts as $post_id => $value ) {
-							$this->rollback_post_field( $field_name, $post_id, $value, $post_type );
+							$this->rollback_post_field( $field_name, $post_id, $value, $post_type, $group_key );
 						}
 					}
 				}
 
 				if ( isset( $field_data['options'] ) ) {
 					// Handle options.
-					$this->rollback_option( $field_name, $field_data['options'] );
+					$this->rollback_option( $field_name, $field_data['options'], $group_key );
 				}
 
 				if ( isset( $field_data['taxonomies'] ) ) {
 					// Handle taxonomies.
 					foreach ( $field_data['taxonomies'] as $taxonomy => $terms ) {
 						foreach ( $terms as $term_id => $value ) {
-							$this->rollback_taxonomy_field( $field_name, $term_id, $value, $taxonomy );
+							$this->rollback_taxonomy_field( $field_name, $term_id, $value, $taxonomy, $group_key );
 						}
 					}
 				}
@@ -892,7 +892,7 @@ class Importer {
 					// Handle comments.
 					foreach ( $field_data['comments'] as $post_type => $comments ) {
 						foreach ( $comments as $comment_id => $value ) {
-							$this->rollback_comment_field( $field_name, $comment_id, $value, $post_type );
+							$this->rollback_comment_field( $field_name, $comment_id, $value, $post_type, $group_key );
 						}
 					}
 				}
@@ -900,7 +900,7 @@ class Importer {
 				if ( isset( $field_data['users'] ) ) {
 					// Handle users.
 					foreach ( $field_data['users'] as $user_id => $value ) {
-						$this->rollback_user_field( $field_name, $user_id, $value );
+						$this->rollback_user_field( $field_name, $user_id, $value, $group_key );
 					}
 				}
 			}
@@ -916,8 +916,9 @@ class Importer {
 	 * @param int    $post_id    The post ID.
 	 * @param mixed  $value      The original value to restore.
 	 * @param string $post_type  The post type.
+	 * @param string $group_key  The key of the field group.
 	 */
-	private function rollback_post_field( $field_name, $post_id, $value, $post_type ) {
+	private function rollback_post_field( $field_name, $post_id, $value, $post_type, $group_key ) {
 		$field_object   = get_field_object( $field_name, $post_id );
 		$existing_value = get_field( $field_name, $post_id, $this->processor->maybe_format_value( $field_object ?? array() ) );
 
@@ -991,8 +992,9 @@ class Importer {
 	 * @param int    $term_id    The ID of the term.
 	 * @param mixed  $value      The original value to restore.
 	 * @param string $taxonomy   The taxonomy name.
+	 * @param string $group_key  The key of the field group.
 	 */
-	private function rollback_taxonomy_field( $field_name, $term_id, $value, $taxonomy ) {
+	private function rollback_taxonomy_field( $field_name, $term_id, $value, $taxonomy, $group_key ) {
 		$term_id = absint( $term_id );
 		if ( ! $term_id ) {
 			return;
@@ -1075,8 +1077,9 @@ class Importer {
 	 *
 	 * @param string $field_name The field name.
 	 * @param mixed  $value      The original value to restore.
+	 * @param string $group_key  The key of the field group.
 	 */
-	private function rollback_option( $field_name, $value ) {
+	private function rollback_option( $field_name, $value, $group_key ) {
 		$field_objects  = get_field_objects( 'option' );
 		$field_object   = $field_objects[ $field_name ] ?? array();
 		$existing_value = get_field( $field_name, 'option', $this->processor->maybe_format_value( $field_object ) );
@@ -1144,8 +1147,9 @@ class Importer {
 	 * @param string $field_name The field name.
 	 * @param int    $user_id    The user ID.
 	 * @param mixed  $value      The original value to restore.
+	 * @param string $group_key  The key of the field group.
 	 */
-	private function rollback_user_field( $field_name, $user_id, $value ) {
+	private function rollback_user_field( $field_name, $user_id, $value, $group_key ) {
 		$field_object   = get_field_object( $field_name, 'user_' . $user_id );
 		$existing_value = get_field( $field_name, 'user_' . $user_id, $this->processor->maybe_format_value( $field_object ?? array() ) );
 
@@ -1217,8 +1221,9 @@ class Importer {
 	 * @param int    $comment_id The ID of the comment.
 	 * @param mixed  $value      The original value to restore.
 	 * @param string $post_type  The post type of the comment's post.
+	 * @param string $group_key  The key of the field group.
 	 */
-	private function rollback_comment_field( $field_name, $comment_id, $value, $post_type ) {
+	private function rollback_comment_field( $field_name, $comment_id, $value, $post_type, $group_key ) {
 		$comment_id = absint( $comment_id );
 
 		if ( ! $comment_id ) {

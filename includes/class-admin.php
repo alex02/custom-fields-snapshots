@@ -96,16 +96,14 @@ class Admin {
 	 * @since 1.0.0
 	 */
 	public function add_admin_menu() {
-		add_menu_page(
+		add_submenu_page(
+			'tools.php',
 			__( 'Custom Fields Snapshots', 'custom-fields-snapshots' ),
-			__( 'Field Snapshots', 'custom-fields-snapshots' ),
+			__( 'Custom Fields Snapshots', 'custom-fields-snapshots' ),
 			'manage_options',
 			'custom-fields-snapshots',
-			array( $this, 'render_export_page' ),
-			'dashicons-database-import'
+			array( $this, 'render_custom_fields_snapshots_page' )
 		);
-
-		$this->add_submenu_pages( 'custom-fields-snapshots' );
 	}
 
 	/**
@@ -121,9 +119,9 @@ class Admin {
 		add_submenu_page(
 			'settings.php',
 			__( 'Custom Fields Snapshots', 'custom-fields-snapshots' ),
-			__( 'Field Snapshots', 'custom-fields-snapshots' ),
+			__( 'Custom Fields Snapshots', 'custom-fields-snapshots' ),
 			'manage_network_options',
-			'custom-fields-snapshots-network-settings',
+			'custom-fields-snapshots',
 			array( $this, 'render_network_settings_page' )
 		);
 	}
@@ -214,49 +212,13 @@ class Admin {
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'    => 'custom-fields-snapshots-network-settings',
+					'page'    => 'custom-fields-snapshots',
 					'updated' => 'true',
 				),
 				network_admin_url( 'settings.php' )
 			)
 		);
 		exit;
-	}
-
-	/**
-	 * Add submenu pages.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $parent_slug The slug of the parent menu.
-	 */
-	private function add_submenu_pages( $parent_slug ) {
-		add_submenu_page(
-			$parent_slug,
-			__( 'Export', 'custom-fields-snapshots' ),
-			__( 'Export', 'custom-fields-snapshots' ),
-			'manage_options',
-			$parent_slug,
-			array( $this, 'render_export_page' )
-		);
-
-		add_submenu_page(
-			$parent_slug,
-			__( 'Import', 'custom-fields-snapshots' ),
-			__( 'Import', 'custom-fields-snapshots' ),
-			'manage_options',
-			'custom-fields-snapshots-import',
-			array( $this, 'render_import_page' )
-		);
-
-		add_submenu_page(
-			$parent_slug,
-			__( 'Settings', 'custom-fields-snapshots' ),
-			__( 'Settings', 'custom-fields-snapshots' ),
-			'manage_options',
-			'custom-fields-snapshots-settings',
-			array( $this, 'render_settings_page' )
-		);
 	}
 
 	/**
@@ -291,42 +253,31 @@ class Admin {
 		$form_action      = $is_network_admin ? 'edit.php?action=custom_fields_snapshots_update_network_settings' : 'options.php';
 
 		?>
-		<div class="custom-fields-snapshots wrap">
-			<h1><?php esc_html_e( 'Custom Fields Snapshots', 'custom-fields-snapshots' ); ?></h1>
+	
+		<div class="settings-tab">
+			<form class="settings-form" method="post" action="<?php echo esc_url( trailingslashit( $admin_url ) . $form_action ); ?>">
+				<?php
+				settings_fields( $option_group );
+				do_settings_sections( $option_group );
+				submit_button();
+				?>
+			</form>
 
-			<?php settings_errors( 'custom_fields_snapshots_messages' ); ?>
+			<div class="info-box">
+				<h3><?php esc_html_e( 'About', 'custom-fields-snapshots' ); ?></h3>
+				<p><?php esc_html_e( 'Custom Fields Snapshots allow you to easily create backups of your Advanced Custom Fields (ACF) data by exporting post types, taxonomies, options, users, and comments. These snapshots enable version control, make it easier to share setups with team members, assist with migrations between WordPress environments, and allow quick restoration of previous configurations.', 'custom-fields-snapshots' ); ?></p>
 
-			<h2 class="nav-tab-wrapper">
-				<a href="<?php echo esc_url( trailingslashit( $admin_url ) . 'admin.php?page=custom-fields-snapshots' ); ?>" class="nav-tab"><?php esc_html_e( 'Export', 'custom-fields-snapshots' ); ?></a>
-				<a href="<?php echo esc_url( trailingslashit( $admin_url ) . 'admin.php?page=custom-fields-snapshots-import' ); ?>" class="nav-tab"><?php esc_html_e( 'Import', 'custom-fields-snapshots' ); ?></a>
-				<a href="<?php echo esc_url( trailingslashit( $admin_url ) . 'admin.php?page=custom-fields-snapshots-settings' ); ?>" class="nav-tab nav-tab-active"><?php esc_html_e( 'Settings', 'custom-fields-snapshots' ); ?></a>
-			</h2>
-		
-			<div class="settings-tab">
-				<form class="settings-form" method="post" action="<?php echo esc_url( trailingslashit( $admin_url ) . $form_action ); ?>">
-					<?php
-					settings_fields( $option_group );
-					do_settings_sections( $option_group );
-					submit_button();
-					?>
-				</form>
+				<h3><?php esc_html_e( 'Contribute', 'custom-fields-snapshots' ); ?></h3>
+				<p><?php esc_html_e( 'Support the development of this plugin:', 'custom-fields-snapshots' ); ?></p>
 
-				<div class="info-box">
-					<h3><?php esc_html_e( 'About', 'custom-fields-snapshots' ); ?></h3>
-					<p><?php esc_html_e( 'Custom Fields Snapshots allow you to easily create backups of your Advanced Custom Fields (ACF) data by exporting post types, taxonomies, options, users, and comments. These snapshots enable version control, make it easier to share setups with team members, assist with migrations between WordPress environments, and allow quick restoration of previous configurations.', 'custom-fields-snapshots' ); ?></p>
+				<div class="contribute-box">
+					<a class="button button-primary" href="<?php echo esc_url( 'https://wordpress.org/support/plugin/custom-fields-snapshots/reviews/#new-post' ); ?>" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'Rate it on WordPress.org', 'custom-fields-snapshots' ); ?>
+					</a>
 
-					<h3><?php esc_html_e( 'Contribute', 'custom-fields-snapshots' ); ?></h3>
-					<p><?php esc_html_e( 'Support the development of this plugin:', 'custom-fields-snapshots' ); ?></p>
-
-					<div class="contribute-box">
-						<a class="button button-primary" href="<?php echo esc_url( 'https://wordpress.org/support/plugin/custom-fields-snapshots/reviews/#new-post' ); ?>" target="_blank" rel="noopener noreferrer">
-							<?php esc_html_e( 'Rate it on WordPress.org', 'custom-fields-snapshots' ); ?>
-						</a>
-
-						<a class="button button-primary" href="<?php echo esc_url( 'https://translate.wordpress.org/projects/wp-plugins/custom-fields-snapshots/' ); ?>" target="_blank" rel="noopener noreferrer">
-							<?php esc_html_e( 'Help translate it', 'custom-fields-snapshots' ); ?>
-						</a>
-					</div>
+					<a class="button button-primary" href="<?php echo esc_url( 'https://translate.wordpress.org/projects/wp-plugins/custom-fields-snapshots/' ); ?>" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'Help translate it', 'custom-fields-snapshots' ); ?>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -359,77 +310,165 @@ class Admin {
 	}
 
 	/**
+	 * Render the export page.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_export_page() {
+
+		?>
+		<div class="export-tab">
+			<form class="export-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<?php wp_nonce_field( 'custom-fields-snapshots-export', 'custom-fields-snapshots-export-nonce' ); ?>
+				<input type="hidden" name="action" value="custom_fields_snapshots_export">
+				
+				<div class="export-step">
+					<span class="step-number">1</span>
+					<h3><?php esc_html_e( 'Field Groups', 'custom-fields-snapshots' ); ?></h3>
+					<br /><br />
+					<?php $this->render_field_groups_selection(); ?>
+				</div>
+	
+				<div class="export-step">
+					<span class="step-number">2</span>
+					<h3><?php esc_html_e( 'Content Types', 'custom-fields-snapshots' ); ?></h3>
+					<div class="post-types-container">
+						<div class="post-type-section">
+							<h4><?php esc_html_e( 'Post Types', 'custom-fields-snapshots' ); ?></h4>
+
+							<div class="scrollable-content">
+								<?php $this->render_post_types_selection( 'public' ); ?>
+								<?php $this->render_post_types_selection( 'private' ); ?>
+							</div>
+						</div>
+						<div class="post-type-section">
+							<h4><?php esc_html_e( 'Taxonomies', 'custom-fields-snapshots' ); ?></h4>
+							
+							<div class="scrollable-content">
+								<?php $this->render_taxonomies_selection( 'public' ); ?>
+								<?php $this->render_taxonomies_selection( 'private' ); ?>
+							</div>
+						</div>
+						<div class="site-wide-section">
+							<h4><?php esc_html_e( 'Site-wide Data', 'custom-fields-snapshots' ); ?></h4>
+
+							<div class="scrollable-content">
+								<div class="select-all-site-wide-data-container post-type-selection">
+									<label>
+										<input type="checkbox" class="select-all-site-wide-data">
+										<?php
+										/* translators: %s: Post type label (e.g., "Public" or "Private") */
+										esc_html_e( 'All Site-wide Data', 'custom-fields-snapshots' );
+										?>
+									</label>
+								</div>
+								<div class="post-type-selection">
+									<?php
+									$is_acf_pro_active = Plugin::is_acf_pro_active();
+									?>
+									<label <?php echo ! $is_acf_pro_active ? 'class="disabled"' : ''; ?>>
+										<input type="checkbox" 
+											name="options" 
+											value="1" 
+											class="options-checkbox"
+											<?php disabled( ! $is_acf_pro_active ); ?>>
+											<span class="custom-fields-snapshot-post-item">
+											<span><?php esc_html_e( 'Options', 'custom-fields-snapshots' ); ?></span>
+											<?php if ( ! $is_acf_pro_active ) : ?>
+												<span class="tooltip">
+													<span class="dashicons dashicons-info"></span>
+													<span class="tooltiptext"><?php esc_html_e( 'ACF Pro required', 'custom-fields-snapshots' ); ?></span>
+												</span>
+											<?php endif; ?>
+										</span>
+									</label>
+								</div>
+
+								<div class="post-type-selection">
+									<label>
+										<input type="checkbox" name="comments" value="1" class="comments-checkbox">
+										<span class="custom-fields-snapshot-post-item">
+											<span><?php esc_html_e( 'Comments', 'custom-fields-snapshots' ); ?></span>
+												<span class="tooltip">
+													<span class="dashicons dashicons-info"></span>
+													<span class="tooltiptext"><?php esc_html_e( 'Requires at least one post type to be selected', 'custom-fields-snapshots' ); ?></span>
+												</span>
+										</span>
+									</label>
+								</div>
+
+								<?php $this->render_users_selection(); ?>
+								<?php $this->render_user_roles_selection(); ?>
+							</div>
+						</div>
+					</div>
+				</div>
+	
+				<p><input type="submit" class="button button-primary" value="<?php esc_attr_e( 'Export Snapshot', 'custom-fields-snapshots' ); ?>"></p>
+			</form>
+		</div>
+		<?php
+
+		$this->enqueue_export_assets();
+	}
+
+	/**
 	 * Render the import page.
 	 *
 	 * @since 1.0.0
 	 */
 	public function render_import_page() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
 
 		?>
-		<div class="custom-fields-snapshots wrap">
-			<h1><?php esc_html_e( 'Import Snapshot', 'custom-fields-snapshots' ); ?></h1>
-			
-			<h2 class="nav-tab-wrapper">
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=custom-fields-snapshots' ) ); ?>" class="nav-tab"><?php esc_html_e( 'Export', 'custom-fields-snapshots' ); ?></a>
+		<div class="import-tab">
+			<div class="import-box">
+				<h3><?php esc_html_e( 'Import Snapshot', 'custom-fields-snapshots' ); ?></h3>
 
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=custom-fields-snapshots-import' ) ); ?>" class="nav-tab nav-tab-active"><?php esc_html_e( 'Import', 'custom-fields-snapshots' ); ?></a>
-
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=custom-fields-snapshots-settings' ) ); ?>" class="nav-tab"><?php esc_html_e( 'Settings', 'custom-fields-snapshots' ); ?></a>
-			</h2>
+				<div class="import-container">
+					<form class="import-form" method="post" enctype="multipart/form-data">
+						<?php wp_nonce_field( 'custom-fields-snapshots-import', 'custom-fields-snapshots-import-nonce' ); ?>
 	
-			<div class="import-tab">
-				<div class="import-box">
-					<h3><?php esc_html_e( 'Import Snapshot', 'custom-fields-snapshots' ); ?></h3>
-
-					<div class="import-container">
-						<form class="import-form" method="post" enctype="multipart/form-data">
-							<?php wp_nonce_field( 'custom-fields-snapshots-import', 'custom-fields-snapshots-import-nonce' ); ?>
-		
-							<div class="upload-area">
-								<div class="upload-icon dashicons dashicons-upload"></div>
-								<p style="margin-top:2.5em"><?php esc_html_e( 'Drag & drop your JSON file here or click to select', 'custom-fields-snapshots' ); ?></p>
-								<input type="file" name="import_file" class="import-file" accept=".json" style="display:none">
-							</div>
-							
-							<div class="file-info" style="display:none">
-								<span class="file-name"></span>
-								<button type="button" class="remove-file button"><?php esc_html_e( 'Remove', 'custom-fields-snapshots' ); ?></button>
-							</div>
-		
-							<div class="import-options">
-								<label class="rollback-changes" for="rollback-changes-input">
-									<input type="checkbox" name="rollback_changes" id="rollback-changes-input" value="1" checked>
-									<?php esc_html_e( 'Rollback changes on failure', 'custom-fields-snapshots' ); ?>
-									<span class="rollback-info"><?php esc_html_e( 'In case the import process fails, all changes will be automatically reverted.', 'custom-fields-snapshots' ); ?></span>
-								</label>
-							</div>
-		
-							<p><input type="submit" class="button button-primary" value="<?php esc_attr_e( 'Import Snapshot', 'custom-fields-snapshots' ); ?>"></p>
-						</form>
-		
-						<div class="import-validation-message"></div>
-						<div class="import-result" style="display:none"></div>
-						<div class="event-log" style="display:none"></div>
-					</div>
+						<div class="upload-area">
+							<div class="upload-icon dashicons dashicons-upload"></div>
+							<p style="margin-top:2.5em"><?php esc_html_e( 'Drag & drop your JSON file here or click to select', 'custom-fields-snapshots' ); ?></p>
+							<input type="file" name="import_file" class="import-file" accept=".json" style="display:none">
+						</div>
+						
+						<div class="file-info" style="display:none">
+							<span class="file-name"></span>
+							<button type="button" class="remove-file button"><?php esc_html_e( 'Remove', 'custom-fields-snapshots' ); ?></button>
+						</div>
+	
+						<div class="import-options">
+							<label class="rollback-changes" for="rollback-changes-input">
+								<input type="checkbox" name="rollback_changes" id="rollback-changes-input" value="1" checked>
+								<?php esc_html_e( 'Rollback changes on failure', 'custom-fields-snapshots' ); ?>
+								<span class="rollback-info"><?php esc_html_e( 'In case the import process fails, all changes will be automatically reverted.', 'custom-fields-snapshots' ); ?></span>
+							</label>
+						</div>
+	
+						<p><input type="submit" class="button button-primary" value="<?php esc_attr_e( 'Import Snapshot', 'custom-fields-snapshots' ); ?>"></p>
+					</form>
+	
+					<div class="import-validation-message"></div>
+					<div class="import-result" style="display:none"></div>
+					<div class="event-log" style="display:none"></div>
 				</div>
+			</div>
 
-				<div class="info-box">
-					<h3><?php esc_html_e( 'How To Use', 'custom-fields-snapshots' ); ?></h3>
+			<div class="info-box">
+				<h3><?php esc_html_e( 'How To Use', 'custom-fields-snapshots' ); ?></h3>
 
-					<ol class="info-box-list">
-						<li><?php esc_html_e( 'Back up your WordPress database', 'custom-fields-snapshots' ); ?></li>
-						<li><?php esc_html_e( 'Upload the snapshot JSON file (drag or select)', 'custom-fields-snapshots' ); ?></li>
-						<li><?php esc_html_e( 'Enable "Rollback changes on failure" (recommended)', 'custom-fields-snapshots' ); ?></li>
-						<li><?php esc_html_e( 'Click "Import Snapshot"', 'custom-fields-snapshots' ); ?></li>
-					</ol>
+				<ol class="info-box-list">
+					<li><?php esc_html_e( 'Back up your WordPress database', 'custom-fields-snapshots' ); ?></li>
+					<li><?php esc_html_e( 'Upload the snapshot JSON file (drag or select)', 'custom-fields-snapshots' ); ?></li>
+					<li><?php esc_html_e( 'Enable "Rollback changes on failure" (recommended)', 'custom-fields-snapshots' ); ?></li>
+					<li><?php esc_html_e( 'Click "Import Snapshot"', 'custom-fields-snapshots' ); ?></li>
+				</ol>
 
-					<p><strong><?php esc_html_e( "Even with the rollback feature enabled, it's always a good idea to have a backup of your data for extra precaution.", 'custom-fields-snapshots' ); ?></strong></p>
+				<p><strong><?php esc_html_e( "Even with the rollback feature enabled, it's always a good idea to have a backup of your data for extra precaution.", 'custom-fields-snapshots' ); ?></strong></p>
 
-					<p><?php esc_html_e( 'If you encounter any issues, enable event logging in Settings and retry the import to troubleshoot the issue.', 'custom-fields-snapshots' ); ?></p>
-				</div>
+				<p><?php esc_html_e( 'If you encounter any issues, enable event logging in Settings and retry the import to troubleshoot the issue.', 'custom-fields-snapshots' ); ?></p>
 			</div>
 		</div>
 		<?php
@@ -499,120 +538,84 @@ class Admin {
 	}
 
 	/**
-	 * Render the export page.
+	 * Render the Custom Fields Snapshots admin page.
 	 *
-	 * @since 1.0.0
+	 * This function handles the rendering of the Custom Fields Snapshots page in the WordPress admin area.
+	 *
+	 * @since 1.2.1
 	 */
-	public function render_export_page() {
+	public function render_custom_fields_snapshots_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$tabs = array( 'export', 'import', 'settings' );
+		$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'export'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if ( ! in_array( $tab, $tabs, true ) ) {
+			$tab = 'export';
+		}
+
+		switch ( $tab ) {
+			case 'import':
+				$page_title = __( 'Import Snapshot', 'custom-fields-snapshots' );
+				break;
+			case 'settings':
+				$page_title = __( 'Custom Fields Snapshots', 'custom-fields-snapshots' );
+				break;
+			case 'export':
+			default:
+				$page_title = __( 'Export Snapshot', 'custom-fields-snapshots' );
+				break;
+		}
 
 		?>
 		<div class="custom-fields-snapshots wrap">
-			<h1><?php esc_html_e( 'Export Snapshot', 'custom-fields-snapshots' ); ?></h1>
+			<h1><?php echo esc_html( $page_title ); ?></h1>
 
-			<div class="export-validation-message"></div>
+			<?php
+			switch ( $tab ) {
+				case 'settings':
+					settings_errors( 'custom_fields_snapshots_messages' );
+					break;
 
+				case 'export':
+				default:
+					echo '<div class="export-validation-message"></div>';
+					break;
+			}
+			?>
+	
 			<h2 class="nav-tab-wrapper">
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=custom-fields-snapshots' ) ); ?>" class="nav-tab nav-tab-active"><?php esc_html_e( 'Export', 'custom-fields-snapshots' ); ?></a>
-
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=custom-fields-snapshots-import' ) ); ?>" class="nav-tab"><?php esc_html_e( 'Import', 'custom-fields-snapshots' ); ?></a>
-
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=custom-fields-snapshots-settings' ) ); ?>" class="nav-tab"><?php esc_html_e( 'Settings', 'custom-fields-snapshots' ); ?></a>
+				<a href="<?php echo esc_url( admin_url( 'tools.php?page=custom-fields-snapshots&tab=export' ) ); ?>" class="nav-tab <?php echo 'export' === $tab ? 'nav-tab-active' : ''; ?>">
+					<?php esc_html_e( 'Export', 'custom-fields-snapshots' ); ?>
+				</a>
+				<a href="<?php echo esc_url( admin_url( 'tools.php?page=custom-fields-snapshots&tab=import' ) ); ?>" class="nav-tab <?php echo 'import' === $tab ? 'nav-tab-active' : ''; ?>">
+					<?php esc_html_e( 'Import', 'custom-fields-snapshots' ); ?>
+				</a>
+				<a href="<?php echo esc_url( admin_url( 'tools.php?page=custom-fields-snapshots&tab=settings' ) ); ?>" class="nav-tab <?php echo 'settings' === $tab ? 'nav-tab-active' : ''; ?>">
+					<?php esc_html_e( 'Settings', 'custom-fields-snapshots' ); ?>
+				</a>
 			</h2>
-
-			<div class="export-tab">
-				<form class="export-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-					<?php wp_nonce_field( 'custom-fields-snapshots-export', 'custom-fields-snapshots-export-nonce' ); ?>
-					<input type="hidden" name="action" value="custom_fields_snapshots_export">
-					
-					<div class="export-step">
-						<span class="step-number">1</span>
-						<h3><?php esc_html_e( 'Field Groups', 'custom-fields-snapshots' ); ?></h3>
-						<br /><br />
-						<?php $this->render_field_groups_selection(); ?>
-					</div>
-		
-					<div class="export-step">
-						<span class="step-number">2</span>
-						<h3><?php esc_html_e( 'Content Types', 'custom-fields-snapshots' ); ?></h3>
-						<div class="post-types-container">
-							<div class="post-type-section">
-								<h4><?php esc_html_e( 'Post Types', 'custom-fields-snapshots' ); ?></h4>
-
-								<div class="scrollable-content">
-									<?php $this->render_post_types_selection( 'public' ); ?>
-									<?php $this->render_post_types_selection( 'private' ); ?>
-								</div>
-							</div>
-							<div class="post-type-section">
-								<h4><?php esc_html_e( 'Taxonomies', 'custom-fields-snapshots' ); ?></h4>
-								
-								<div class="scrollable-content">
-									<?php $this->render_taxonomies_selection( 'public' ); ?>
-									<?php $this->render_taxonomies_selection( 'private' ); ?>
-								</div>
-							</div>
-							<div class="site-wide-section">
-								<h4><?php esc_html_e( 'Site-wide Data', 'custom-fields-snapshots' ); ?></h4>
-
-								<div class="scrollable-content">
-									<div class="select-all-site-wide-data-container post-type-selection">
-										<label>
-											<input type="checkbox" class="select-all-site-wide-data">
-											<?php
-											/* translators: %s: Post type label (e.g., "Public" or "Private") */
-											esc_html_e( 'All Site-wide Data', 'custom-fields-snapshots' );
-											?>
-										</label>
-									</div>
-									<div class="post-type-selection">
-										<?php
-										$is_acf_pro_active = Plugin::is_acf_pro_active();
-										?>
-										<label <?php echo ! $is_acf_pro_active ? 'class="disabled"' : ''; ?>>
-											<input type="checkbox" 
-												name="options" 
-												value="1" 
-												class="options-checkbox"
-												<?php disabled( ! $is_acf_pro_active ); ?>>
-												<span class="custom-fields-snapshot-post-item">
-												<span><?php esc_html_e( 'Options', 'custom-fields-snapshots' ); ?></span>
-												<?php if ( ! $is_acf_pro_active ) : ?>
-													<span class="tooltip">
-														<span class="dashicons dashicons-info"></span>
-														<span class="tooltiptext"><?php esc_html_e( 'ACF Pro required', 'custom-fields-snapshots' ); ?></span>
-													</span>
-												<?php endif; ?>
-											</span>
-										</label>
-									</div>
-
-									<div class="post-type-selection">
-										<label>
-											<input type="checkbox" name="comments" value="1" class="comments-checkbox">
-											<span class="custom-fields-snapshot-post-item">
-												<span><?php esc_html_e( 'Comments', 'custom-fields-snapshots' ); ?></span>
-													<span class="tooltip">
-														<span class="dashicons dashicons-info"></span>
-														<span class="tooltiptext"><?php esc_html_e( 'Requires at least one post type to be selected', 'custom-fields-snapshots' ); ?></span>
-													</span>
-											</span>
-										</label>
-									</div>
-
-									<?php $this->render_users_selection(); ?>
-									<?php $this->render_user_roles_selection(); ?>
-								</div>
-							</div>
-						</div>
-					</div>
-		
-					<p><input type="submit" class="button button-primary" value="<?php esc_attr_e( 'Export Snapshot', 'custom-fields-snapshots' ); ?>"></p>
-				</form>
+	
+			<div class="tab-content">
+				<?php
+				switch ( $tab ) {
+					case 'import':
+						$this->render_import_page();
+						break;
+					case 'settings':
+						$this->render_settings_page();
+						break;
+					case 'export':
+					default:
+						$this->render_export_page();
+						break;
+				}
+				?>
 			</div>
 		</div>
 		<?php
-
-		$this->enqueue_export_assets();
 	}
 
 	/**
@@ -1359,7 +1362,6 @@ class Admin {
 			);
 		}
 
-		// Load the importer class only when needed.
 		require_once CUSTOM_FIELDS_SNAPSHOTS_PLUGIN_DIR . 'includes/class-importer.php';
 
 		$this->importer = new Importer( $this->logger );

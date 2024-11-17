@@ -26,33 +26,23 @@ class Plugin {
 	 * Sets up plugin hooks and filters.
 	 */
 	public static function init() {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		load_plugin_textdomain(
+			'custom-fields-snapshots',
+			false,
+			CUSTOM_FIELDS_SNAPSHOTS_PLUGIN_DIR . '/languages'
+		);
+
 		if ( ! self::is_acf_active() ) {
 			add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 			add_action( 'admin_notices', array( __CLASS__, 'admin_notice' ) );
 			return;
 		}
 
-		self::init_admin();
-	}
-
-	/**
-	 * Initialize the plugin admin.
-	 *
-	 * @since 1.0.0
-	 *
-	 * Loads admin-specific functionality.
-	 */
-	private static function init_admin() {
-		if ( ! is_admin() ) {
-			return;
-		}
-
-		// Load plugin text domain for internationalization.
-		load_plugin_textdomain(
-			'custom-fields-snapshots',
-			false,
-			CUSTOM_FIELDS_SNAPSHOTS_PLUGIN_DIR . '/languages'
-		);
+		add_filter( 'plugin_action_links_' . plugin_basename( CUSTOM_FIELDS_SNAPSHOTS_PLUGIN_FILE ), array( __CLASS__, 'add_manage_snapshots_link' ) );
 
 		require_once CUSTOM_FIELDS_SNAPSHOTS_PLUGIN_DIR . 'includes/class-admin.php';
 
@@ -109,6 +99,23 @@ class Plugin {
 			$plugin_meta[] = '<span class="error">' . esc_html__( 'Requires Advanced Custom Fields or Advanced Custom Fields Pro to be active.', 'custom-fields-snapshots' ) . '</span>';
 		}
 		return $plugin_meta;
+	}
+
+	/**
+	 * Add a "Manage Snapshots" link on the Plugins page.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @param array $links Existing action links.
+	 * @return array Modified action links with "Manage Snapshots".
+	 */
+	public static function add_manage_snapshots_link( $links ) {
+		$manage_url  = admin_url( 'tools.php?page=custom-fields-snapshots' );
+		$manage_link = '<a href="' . esc_url( $manage_url ) . '">' . esc_html__( 'Manage Snapshots', 'custom-fields-snapshots' ) . '</a>';
+
+		array_unshift( $links, $manage_link );
+
+		return $links;
 	}
 
 	/**
